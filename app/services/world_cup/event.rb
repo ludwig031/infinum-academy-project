@@ -14,7 +14,7 @@ module WorldCup
     end
 
     def type
-      event_hash['type']
+      event_hash['type_of_event']
     end
 
     def player
