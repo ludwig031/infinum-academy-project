@@ -26,7 +26,7 @@ module WorldCup
       match_hash['home_team']['goals']
     end
 
-    def home_team
+    def home_team_name
       match_hash['home_team']['country']
     end
 
@@ -38,7 +38,7 @@ module WorldCup
       match_hash['away_team']['goals']
     end
 
-    def away_team
+    def away_team_name
       match_hash['away_team']['country']
     end
 
@@ -94,8 +94,8 @@ module WorldCup
       {
         venue: venue,
         status: status,
-        home_team: home_team,
-        away_team: away_team,
+        home_team_name: home_team_name,
+        away_team_name: away_team_name,
         goals: goals,
         score: score
       }
