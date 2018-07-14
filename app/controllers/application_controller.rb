@@ -2,9 +2,15 @@
 
 # ApplicationController class inherits a constructor from ActionController::Base
 class ApplicationController < ActionController::Base
+  def validate_date(string)
+    string.match(/\d{4}-\d{2}-\d{2}/)
+  end
+
   def matches
-    output = if request.query_parameters.present?
-               WorldCup.matches_on('2018-07-11')
+    query = request.query_parameters
+    date = query['date']
+    output = if date && validate_date(date)
+               WorldCup.matches_on(date)
              else
                WorldCup.matches
              end
