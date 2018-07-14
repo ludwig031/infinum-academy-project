@@ -2,12 +2,13 @@
 
 # WorldCup module creates namespace for events and matches
 module WorldCup
+  require 'httparty'
   attr_accessor :response
 
   include HTTParty
   base_uri 'https://worldcup.sfg.io/matches'
 
-  def self.matches
+  def matches
     matches = []
     response_hash = get('', verify: false)
     response_hash.each do |match|
@@ -16,7 +17,7 @@ module WorldCup
     matches
   end
 
-  def self.matches_on(query_date)
+  def matches_on(query_date)
     matches = []
     response_hash = get("?start_date=#{query_date}", verify: false)
     response_hash.each do |match|
