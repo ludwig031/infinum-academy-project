@@ -19,6 +19,7 @@ module WorldCup
 
   def self.matches_on(query_date)
     matches = []
+    query_date = Date.parse(query_date).strftime('%Y-%m-%d')
     response_hash = get("?start_date=#{query_date}", verify: false)
     response_hash.each do |match|
       matches << Match.new(match)
