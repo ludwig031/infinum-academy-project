@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe 'event class', :event do
+RSpec.describe WorldCup do
   attr_accessor :event
 
   before(:all) do
@@ -41,5 +41,4 @@ RSpec.describe 'event class', :event do
       expect(event.to_s).to eq("#402: goal@80' - Luka MODRIC")
     end
   end
-
 end
