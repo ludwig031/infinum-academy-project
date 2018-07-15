@@ -3,7 +3,7 @@
 RSpec.describe WorldCup do
   attr_accessor :match
 
-  before(:each) do
+  before do
     @match = WorldCup::Match.new(
       'venue' => 'Moscow',
       'location' => 'Luzhniki Stadium',

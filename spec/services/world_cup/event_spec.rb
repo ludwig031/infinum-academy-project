@@ -3,7 +3,7 @@
 RSpec.describe WorldCup do
   attr_accessor :event
 
-  before(:each) do
+  before do
     @event = WorldCup::Event.new(
       'id' => 402,
       'type_of_event' => 'goal',
