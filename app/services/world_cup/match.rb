@@ -59,16 +59,13 @@ module WorldCup
 
     def goals
       goals = []
-      match_hash['home_team_events'].each do |event|
-        event['type_of_event'] == 'goal' ? goals << event : next
+      events.each do |event|
+        event.type == 'goal' ? goals << Event.new(event) : next
       end
-      match_hash['away_team_events'].each do |event|
-        event['type_of_event'] == 'goal' ? goals << event : next
-      end
-      status == 'completed' ? goals : '--'
+      goals
     end
 
-    def goals_sum
+    def goal_sum
       sum = home_team_goals + away_team_goals
       status == 'completed' ? sum : '--'
     end
@@ -85,7 +82,7 @@ module WorldCup
         status: status,
         home_team_name: home_team_name,
         away_team_name: away_team_name,
-        goals: goals_sum,
+        goals: goal_sum,
         score: score
       }
     end
