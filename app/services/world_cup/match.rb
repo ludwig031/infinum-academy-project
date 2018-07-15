@@ -19,7 +19,7 @@ module WorldCup
 
     def starts_at
       starts_at = match_hash['datetime']
-      Time.zone.parse(starts_at).to_time
+      Time.zone.parse(starts_at).strftime('%H:%M:%S')
     end
 
     def home_team_goals
