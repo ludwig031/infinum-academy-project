@@ -34,3 +34,5 @@ AllCops:
     - 'db/schema.rb'
     - 'db/migrate/*.rb'
     - 'config/**/*.rb'
+
+EnforcedStyle: brackets
