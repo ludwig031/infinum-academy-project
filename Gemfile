@@ -49,7 +49,7 @@ group :development do
   gem 'rspec-rails', '~> 3.7'
   gem 'rubocop', '~> 0.58.0', require: false
   gem 'rubocop-rspec', '~> 1.27.0', require: false
-  gem 'table_print'
+
   # Access an interactive console on exception pages or by calling 'console'
   # anywhere in the code.
   gem 'web-console', '>= 3.3.0'
@@ -59,6 +59,8 @@ group :development do
   gem 'spring'
   gem 'spring-watcher-listen', '~> 2.0.0'
 end
+
+gem 'table_print'
 
 # Windows does not include zoneinfo files, so bundle the tzinfo-data gem
 gem 'tzinfo-data', platforms: %i[mingw mswin x64_mingw jruby]
