@@ -87,8 +87,8 @@ module WorldCup
       {
         venue: venue,
         status: status,
-        home_team_name: home_team_name,
-        away_team_name: away_team_name,
+        home_team: home_team,
+        away_team: away_team,
         goals: goal_sum,
         score: score
       }
