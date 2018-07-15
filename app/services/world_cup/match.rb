@@ -81,7 +81,7 @@ module WorldCup
       match_hash['away_team_events'].each do |event|
         event['type_of_event'] == 'goal' ? goals << event : next
       end
-      match_hash['status'] == 'completed' ? goals : '--'
+      status == 'completed' ? goals : '--'
     end
 
     def score

@@ -8,16 +8,16 @@ module WorldCup
   include HTTParty
   base_uri 'https://worldcup.sfg.io/matches'
 
-  def matches
+  def self.matches
     matches = []
     response_hash = get('', verify: false)
-    response_hash.each do |match|
-      matches << Match.new(match)
+    response_hash.each do |match_hash|
+      matches << Match.new(match_hash)
     end
     matches
   end
 
-  def matches_on(query_date)
+  def self.matches_on(query_date)
     matches = []
     response_hash = get("?start_date=#{query_date}", verify: false)
     response_hash.each do |match|
