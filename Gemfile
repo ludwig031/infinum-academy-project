@@ -42,7 +42,7 @@ group :development, :test do
 end
 
 group :development do
-  gem 'httparty'
+
   gem 'listen', '>= 3.0.5', '< 3.2'
   gem 'overcommit', require: false
   gem 'pry-rails'
@@ -59,7 +59,7 @@ group :development do
   gem 'spring'
   gem 'spring-watcher-listen', '~> 2.0.0'
 end
-
+gem 'httparty'
 gem 'table_print'
 
 # Windows does not include zoneinfo files, so bundle the tzinfo-data gem
