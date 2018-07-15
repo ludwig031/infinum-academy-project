@@ -9,6 +9,7 @@ class ApplicationController < ActionController::Base
   def matches
     query = request.query_parameters
     date = query['date']
+    date = Date.parse(date).strftime('%Y-%m-%d')
     output = if date && validate_date(date)
                WorldCup.matches_on(date)
              else
