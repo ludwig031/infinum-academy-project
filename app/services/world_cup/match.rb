@@ -30,6 +30,8 @@ module WorldCup
       match_hash['home_team']['country']
     end
 
+    alias home_team home_team_name
+
     def home_team_code
       match_hash['home_team']['code']
     end
@@ -41,6 +43,8 @@ module WorldCup
     def away_team_name
       match_hash['away_team']['country']
     end
+
+    alias away_team away_team_name
 
     def away_team_code
       match_hash['away_team']['code']
@@ -66,7 +70,10 @@ module WorldCup
     end
 
     def goal_sum
-      sum = home_team_goals + away_team_goals
+      sum = 0
+      if home_team_goals && away_team_goals
+        sum = home_team_goals + away_team_goals
+      end
       status == 'completed' ? sum : '--'
     end
 
