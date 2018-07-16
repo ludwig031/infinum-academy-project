@@ -24,7 +24,6 @@ module WorldCup
     end
 
     def to_s
-      # #id: type@time - player
       "##{id}: #{type}@#{time} - #{player}"
     end
   end
