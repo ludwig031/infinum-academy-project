@@ -1,48 +1,48 @@
 RSpec.describe WorldCup do
-let(:match) {
-  WorldCup::Match.new(
-    'venue' => 'Moscow',
-    'location' => 'Luzhniki Stadium',
-    'status' => 'completed',
-    'home_team_country' => 'France',
-    'away_team_country' => 'Croatia',
-    'datetime' => '2018-07-15T15:00:00Z',
-    'home_team' => {
-      'country' => 'France',
-      'code' => 'FRA',
-      'goals' => 4,
-      'penalties' => 0
-    },
-    'away_team' => {
-      'country' => 'Croatia',
-      'code' => 'CRO',
-      'goals' => 2,
-      'penalties' => 0
-    },
-    'home_team_events' => [
-      {
-        'id' => 1186,
-        'type_of_event' => 'goal',
-        'player' => 'Paul POGBA',
-        'time' => "59'"
-      }
-    ],
-    'away_team_events' => [
-      {
-        'id' => 1180,
-        'type_of_event' => 'goal',
-        'player' => 'Ivan PERISIC',
-        'time' => "28'"
+  let(:match) {
+    WorldCup::Match.new(
+      'venue' => 'Moscow',
+      'location' => 'Luzhniki Stadium',
+      'status' => 'completed',
+      'home_team_country' => 'France',
+      'away_team_country' => 'Croatia',
+      'datetime' => '2018-07-15T15:00:00Z',
+      'home_team' => {
+        'country' => 'France',
+        'code' => 'FRA',
+        'goals' => 4,
+        'penalties' => 0
       },
-      {
-        'id' => 1185,
-        'type_of_event' => 'substitution-in',
-        'player' => 'Marko PJACA',
-        'time' => "86'"
-      }
-    ]
-  )
-}
+      'away_team' => {
+        'country' => 'Croatia',
+        'code' => 'CRO',
+        'goals' => 2,
+        'penalties' => 0
+      },
+      'home_team_events' => [
+        {
+          'id' => 1186,
+          'type_of_event' => 'goal',
+          'player' => 'Paul POGBA',
+          'time' => "59'"
+        }
+      ],
+      'away_team_events' => [
+        {
+          'id' => 1180,
+          'type_of_event' => 'goal',
+          'player' => 'Ivan PERISIC',
+          'time' => "28'"
+        },
+        {
+          'id' => 1185,
+          'type_of_event' => 'substitution-in',
+          'player' => 'Marko PJACA',
+          'time' => "86'"
+        }
+      ]
+    )
+  }
 
 describe 'Match#venue', :match_venue do
   it 'returns match venue' do
