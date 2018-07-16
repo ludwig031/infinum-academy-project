@@ -49,22 +49,17 @@ module WorldCup
     end
 
     def events
-      events = []
-      match_hash['home_team_events'].map do |event|
-        events << Event.new(event)
+      match_hash['home_team_events']
+        .concat(match_hash['away_team_events'])
+        .map do |event|
+        WorldCup::Event.new(event)
       end
-      match_hash['away_team_events'].map do |event|
-        events << Event.new(event)
-      end
-      events
     end
 
     def goals
-      goals = []
-      events.each do |event|
-        event.type == 'goal' ? goals << Event.new(event) : next
+      events.select do |event|
+        event.type == 'goal' ? Event.new(event) : next
       end
-      goals
     end
 
     def goal_sum
