@@ -68,11 +68,8 @@ module WorldCup
     end
 
     def goal_sum
-      sum = 0
-      if home_team_goals && away_team_goals
-        sum = home_team_goals + away_team_goals
-      end
-      status == 'completed' ? sum : '--'
+      '--' if status == 'future'
+      home_team_goals + away_team_goals
     end
 
     def score
