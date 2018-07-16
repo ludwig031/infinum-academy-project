@@ -1,5 +1,5 @@
 RSpec.describe WorldCup do
-  let(:match) {
+  let(:match) do
     WorldCup::Match.new(
       'venue' => 'Moscow',
       'location' => 'Luzhniki Stadium',
@@ -42,7 +42,7 @@ RSpec.describe WorldCup do
         }
       ]
     )
-  }
+  end
 
   describe 'Match#venue', :match_venue do
     it 'returns match venue' do

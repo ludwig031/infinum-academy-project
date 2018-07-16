@@ -1,12 +1,12 @@
 RSpec.describe WorldCup do
-  let(:event) {
+  let(:event) do
     WorldCup::Event.new(
       'id' => 402,
       'type_of_event' => 'goal',
       'player' => 'Luka MODRIC',
       'time' => "80'"
     )
-  }
+  end
 
   describe 'Event#id', :event_id do
     it 'returns event id' do
