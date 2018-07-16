@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 # ApplicationController class inherits a constructor from ActionController::Base
 class ApplicationController < ActionController::Base
   def validate_date(string)

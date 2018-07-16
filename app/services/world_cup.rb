@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 # WorldCup module creates namespace for events and matches
 module WorldCup
   require 'httparty'

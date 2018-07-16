@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 module WorldCup
   # WorldCup::Match class creates single instance of world cup match
   class Match

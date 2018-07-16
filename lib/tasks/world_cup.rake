@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 namespace :world_cup do
   desc 'puts matches on given date in table'
   task :scores, [:date] => :environment do |_task, args|
