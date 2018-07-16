@@ -1,6 +1,5 @@
 # WorldCup module creates namespace for events and matches
 module WorldCup
-  require 'httparty'
   attr_accessor :response
 
   include HTTParty
