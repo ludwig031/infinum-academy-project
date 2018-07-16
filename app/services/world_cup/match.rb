@@ -50,10 +50,10 @@ module WorldCup
 
     def events
       events = []
-      match_hash['home_team_events'].each do |event|
+      match_hash['home_team_events'].map do |event|
         events << Event.new(event)
       end
-      match_hash['away_team_events'].each do |event|
+      match_hash['away_team_events'].map do |event|
         events << Event.new(event)
       end
       events
