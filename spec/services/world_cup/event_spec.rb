@@ -8,33 +8,33 @@ RSpec.describe WorldCup do
     )
   }
 
-describe 'Event#id', :event_id do
-  it 'returns event id' do
-    expect(event.id).to eq(402)
+  describe 'Event#id', :event_id do
+    it 'returns event id' do
+      expect(event.id).to eq(402)
+    end
   end
-end
 
-describe 'Event#type', :event_type do
-  it 'returns event type' do
-    expect(event.type).to eq('goal')
+  describe 'Event#type', :event_type do
+    it 'returns event type' do
+      expect(event.type).to eq('goal')
+    end
   end
-end
 
-describe 'Event#player', :event_player do
-  it 'returns event player' do
-    expect(event.player).to eq('Luka MODRIC')
+  describe 'Event#player', :event_player do
+    it 'returns event player' do
+      expect(event.player).to eq('Luka MODRIC')
+    end
   end
-end
 
-describe 'Event#time', :event_time do
-  it 'returns event id' do
-    expect(event.time).to eq("80'")
+  describe 'Event#time', :event_time do
+    it 'returns event id' do
+      expect(event.time).to eq("80'")
+    end
   end
-end
 
-describe 'Event#to_s', :event_to_string do
-  it 'returns modified event string' do
-    expect(event.to_s).to eq("#402: goal@80' - Luka MODRIC")
+  describe 'Event#to_s', :event_to_string do
+    it 'returns modified event string' do
+      expect(event.to_s).to eq("#402: goal@80' - Luka MODRIC")
+    end
   end
-end
 end
