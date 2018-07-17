@@ -6,7 +6,7 @@ class CreateFlights < ActiveRecord::Migration[5.2]
       t.integer :base_price
       t.datetime :flys_at
       t.datetime :lands_at
-      add_reference :company, :flight, index: true, foreign_key: true
+      t.references :company, index: true, foreign_key: true
     end
   end
 end
