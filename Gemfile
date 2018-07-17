@@ -3,6 +3,7 @@ git_source(:github) { |repo| "https://github.com/#{repo}.git" }
 
 ruby '2.5.1'
 gem 'activeadmin'
+
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
 gem 'rails', '~> 5.2.0'
 # Use postgresql as the database for Active Record
@@ -46,6 +47,8 @@ group :development do
   gem 'rspec-rails', '~> 3.7'
   gem 'rubocop', '~> 0.58.0', require: false
   gem 'rubocop-rspec', '~> 1.27.0', require: false
+  gem 'shoulda-matchers'
+  gem 'factory_bot_rails'
 
   # Access an interactive console on exception pages or by calling 'console'
   # anywhere in the code.
