@@ -11,5 +11,4 @@ class User < ApplicationRecord
             presence: true,
             uniqueness: { case_sensitive: false },
             format: /\A[^@\s]+@([^@\s]+\.)+[^@\s]+\z/
-
 end
