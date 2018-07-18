@@ -14,6 +14,6 @@ class Booking < ApplicationRecord
 
   def future_booking
     return if flight && flight.flys_at < Time.zone.now
-    errors.add(:end_date, 'must be booked in the future')
+    errors.add(:flight_id, 'must be booked in the future')
   end
 end
