@@ -1,5 +1,9 @@
-require 'rails_helper'
-
 RSpec.describe Booking, type: :model do
-  pending "add some examples to (or delete) #{__FILE__}"
+  it 'is invalid without number as seat price' do
+    is_expected.to validate_numericality_of(:seat_price)
+  end
+
+  it 'is invalid without number as number of seats' do
+    is_expected.to validate_numericality_of(:no_of_seats)
+  end
 end
