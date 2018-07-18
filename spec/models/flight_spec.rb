@@ -1,5 +1,5 @@
 RSpec.describe Flight, type: :model do
-  let(:flight) { FactoryBot.create(:flight) }
+  subject(:flight) { FactoryBot.build(:flight) }
 
   it 'is invalid without an name' do
     is_expected.to validate_presence_of(:name)
@@ -22,13 +22,12 @@ RSpec.describe Flight, type: :model do
   end
 
   it 'flys_at before lands_at' do
-    Company.create(id: 1, name: 'Grunf').save
-    flight = Flight.new(name: 'Idemo u Irsku',
-                        no_of_seats: 50,
-                        base_price: 100,
-                        flys_at: Time.zone.now + 5.hours,
-                        lands_at: Time.zone.now,
-                        company_id: 1)
+    flight = FactoryBot.build(:flight,
+                              name: 'Idemo u Irsku',
+                              no_of_seats: 50,
+                              base_price: 100,
+                              flys_at: Time.zone.now + 5.hours,
+                              lands_at: Time.zone.now)
     flight.valid?
     expect(flight.errors[:lands_at]).to \
       include('take off time can not be after landing time')
