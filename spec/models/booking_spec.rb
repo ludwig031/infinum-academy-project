@@ -10,12 +10,10 @@ RSpec.describe Booking, type: :model do
   end
 
   it 'is invalid if flight is in past' do
-    booking = FactoryBot.build(:booking,
-                               flight:
-                                 FactoryBot.create(:flight,
-                                                   flys_at:
-                                                     Time.zone.now - 5.hours))
-
+    FactoryBot.build(:booking,
+                     flight:
+                       FactoryBot.create(:flight,
+                                         flys_at: Time.zone.now - 5.hours))
     booking.valid?
     expect(booking.errors[:flight_id]).to \
       include('must be booked in the future')
