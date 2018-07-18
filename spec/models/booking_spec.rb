@@ -1,5 +1,5 @@
 RSpec.describe Booking, type: :model do
-  let(:booking) { FactoryBot.build :booking }
+  subject(:booking) { FactoryBot.build(:booking) }
 
   it 'is invalid without number as seat price' do
     is_expected.to validate_numericality_of(:seat_price)
@@ -10,6 +10,14 @@ RSpec.describe Booking, type: :model do
   end
 
   it 'is invalid if flight is in past' do
+    booking = FactoryBot.build(:booking,
+                               no_of_seats: 1,
+                               seat_price: 2,
+                               flight_id:
+                                 FactoryBot.build(:flight,
+                                                  flys_at:
+                                                    Time.zone.now - 5.hours))
+
     booking.valid?
     expect(booking.errors[:flight_id]).to \
       include('must be booked in the future')
