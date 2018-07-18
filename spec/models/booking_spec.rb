@@ -13,7 +13,7 @@ RSpec.describe Booking, type: :model do
     booking = FactoryBot.build(:booking,
                                no_of_seats: 1,
                                seat_price: 2,
-                               flight_id:
+                               flight:
                                  FactoryBot.build(:flight,
                                                   flys_at:
                                                     Time.zone.now - 5.hours))
