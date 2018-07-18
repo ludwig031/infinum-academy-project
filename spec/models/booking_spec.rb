@@ -11,6 +11,7 @@ RSpec.describe Booking, type: :model do
 
   it 'is invalid if flight is in past' do
     booking.valid?
-    expect(booking.errors[:flight_id]).to include('must be booked in the future')
+    expect(booking.errors[:flight_id]).to \
+      include('must be booked in the future')
   end
 end

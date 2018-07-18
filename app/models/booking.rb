@@ -8,8 +8,8 @@ class Booking < ApplicationRecord
   validates :no_of_seats,
             presence: true,
             numericality: { greater_than: 0 }
-  validates :user_id, presence: true
-  validates :flight_id, presence: true
+  validates :user, presence: true
+  validates :flight, presence: true
   validate :future_booking
 
   def future_booking

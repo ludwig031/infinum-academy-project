@@ -1,8 +1,8 @@
 RSpec.describe User, type: :model do
-  let(:user) { FactoryBot.create(:user) }
+  subject(:user) { FactoryBot.build(:user) }
 
   it 'is valid with valid attributes' do
-    expect(user).to be_valid
+    is_expected.to be_valid
   end
 
   it 'is invalid without an first name' do
@@ -18,7 +18,6 @@ RSpec.describe User, type: :model do
   end
 
   it 'is invalid without unique email' do
-    User.new(first_name: 'ime', last_name: 'prezime', email: 'mail@mail.com').save!(validate: false)
     is_expected.to validate_uniqueness_of(:email).case_insensitive
   end
 end
