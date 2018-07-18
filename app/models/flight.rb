@@ -16,6 +16,6 @@ class Flight < ApplicationRecord
 
   def flys_at_before_lands_at
     return if flys_at && lands_at && (flys_at < lands_at)
-    errors.add(:end_date, 'take off time can not be after landing time')
+    errors.add(:lands_at, 'take off time can not be after landing time')
   end
 end
