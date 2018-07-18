@@ -1,10 +1,6 @@
 RSpec.describe User, type: :model do
   let(:user) { FactoryBot.create(:user) }
 
-  before do
-    FactoryBot.reload
-  end
-
   it 'is valid with valid attributes' do
     expect(user).to be_valid
   end
