@@ -15,7 +15,7 @@ RSpec.describe Booking, type: :model do
     booking = FactoryBot.build(:booking,
                                no_of_seats: 1,
                                seat_price: 2,
-                               flight_id: flight)
+                               flight: flight)
 
     booking.valid?
     expect(booking.errors[:flight_id]).to \
