@@ -13,7 +13,7 @@ class Booking < ApplicationRecord
   validate :future_booking
 
   def future_booking
-    return if flight && flight.flys_at < Time.zone.now
-    errors.add(:flight_id, 'must be booked in the future')
+    return if flight && flight.flys_at > Time.zone.now
+    errors.add(:flys_at, 'must be booked in the future')
   end
 end
