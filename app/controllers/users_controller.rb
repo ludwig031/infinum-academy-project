@@ -1,11 +1,12 @@
 class UsersController < ApplicationController
   def index
+    params.permit
     render json: User.all, each_serializer: UserSerializer
   end
 
   def show
     user = User.find(params[:id])
-
+    params.permit
     render json: user, serializer: UserSerializer
   end
 
