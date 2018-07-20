@@ -5,6 +5,4 @@ class UserSerializer < ActiveModel::Serializer
   attribute :email
   has_many :bookings
   has_many :flights
-  attribute :created_at
-  attribute :updated_at
 end
