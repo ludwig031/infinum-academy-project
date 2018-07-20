@@ -29,7 +29,7 @@ RSpec.describe Flight, type: :model do
                               flys_at: Time.zone.now + 5.hours,
                               lands_at: Time.zone.now)
     flight.valid?
-    expect(flight.errors[:lands_at]).to \
-      include('take off time can not be after landing time')
+    expect(flight.errors[:lands_at])
+      .to include('take off time can not be after landing time')
   end
 end
