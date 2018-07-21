@@ -20,7 +20,7 @@ class BookingsController < ApplicationController
     if booking.save
       render json: booking, status: :created
     else
-      render json: { errors: booking.errors, status: :bad_request }
+      render json: { status: :bad_request, errors: booking.errors }
     end
   end
 
@@ -39,7 +39,7 @@ class BookingsController < ApplicationController
     if booking.update(booking_params)
       render json: booking, status: :ok
     else
-      render json: { errors: booking.errors, status: :bad_request }
+      render json: { status: :bad_request, errors: booking.errors }
     end
   end
 
