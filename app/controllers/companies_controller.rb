@@ -37,7 +37,7 @@ class CompaniesController < ApplicationController
     company = Company.find params[:id]
 
     if company.update(company_params)
-      render json: company, status: :created
+      render json: company, status: :ok
     else
       render json: company.errors, status: :bad_request
     end

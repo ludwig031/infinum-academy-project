@@ -37,7 +37,7 @@ class FlightsController < ApplicationController
     flight = Flight.find params[:id]
 
     if flight.update(flight_params)
-      render json: flight, status: :created
+      render json: flight, status: :ok
     else
       render json: flight.errors, status: :bad_request
     end
