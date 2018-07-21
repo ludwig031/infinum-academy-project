@@ -35,8 +35,12 @@ class FlightsController < ApplicationController
 
   def update
     flight = Flight.find params[:id]
-    return unless flight.update(flight_params)
-    redirect_to action: 'show', id: flight.id
+
+    if flight.update(flight_params)
+      render json: flight, status: :created
+    else
+      render json: flight.errors, status: :bad_request
+    end
   end
 
   def flight_params

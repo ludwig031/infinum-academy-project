@@ -35,8 +35,12 @@ class CompaniesController < ApplicationController
 
   def update
     company = Company.find params[:id]
-    return unless company.update(company_params)
-    redirect_to action: 'show', id: company.id
+
+    if company.update(company_params)
+      render json: company, status: :created
+    else
+      render json: company.errors, status: :bad_request
+    end
   end
 
   def company_params

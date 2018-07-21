@@ -35,8 +35,12 @@ class UsersController < ApplicationController
 
   def update
     user = User.find params[:id]
-    return unless user.update(params[:user])
-    redirect_to action: 'show', id: user.id
+
+    if user.update(user_params)
+      render json: user, status: :created
+    else
+      render json: user.errors, status: :bad_request
+    end
   end
 
   def user_params

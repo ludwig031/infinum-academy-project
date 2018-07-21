@@ -35,8 +35,12 @@ class BookingsController < ApplicationController
 
   def update
     booking = Booking.find params[:id]
-    return unless booking.update(booking_params)
-    redirect_to action: 'show', id: booking.id
+
+    if booking.update(booking_params)
+      render json: booking, status: :created
+    else
+      render json: booking.errors, status: :bad_request
+    end
   end
 
   def booking_params
