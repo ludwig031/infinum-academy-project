@@ -15,11 +15,12 @@ class BookingsController < ApplicationController
   end
 
   def create
-    booking = Booking.new params[:booking]
+    booking = Booking.new(booking_params)
+
     if booking.save
-      redirect_to action: 'show', id: booking.id
+      render json: booking, status: :created
     else
-      render action: 'new'
+      render json: booking.errors, status: :unprocessable_entity
     end
   end
 
@@ -34,7 +35,14 @@ class BookingsController < ApplicationController
 
   def update
     booking = Booking.find params[:id]
-    return unless booking.update(params[:booking])
+    return unless booking.update(booking_params)
     redirect_to action: 'show', id: booking.id
+  end
+
+  def booking_params
+    params.require(:booking).permit(:no_of_seats,
+                                    :seat_price,
+                                    :user_id,
+                                    :booking_id)
   end
 end

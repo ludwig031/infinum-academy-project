@@ -15,11 +15,12 @@ class FlightsController < ApplicationController
   end
 
   def create
-    flight = Flight.new params[:flight]
+    flight = Flight.new(flight_params)
+
     if flight.save
-      redirect_to action: 'show', id: flight.id
+      render json: flight, status: :created
     else
-      render action: 'new'
+      render json: flight.errors, status: :unprocessable_entity
     end
   end
 
@@ -34,7 +35,16 @@ class FlightsController < ApplicationController
 
   def update
     flight = Flight.find params[:id]
-    return unless flight.update(params[:flight])
+    return unless flight.update(flight_params)
     redirect_to action: 'show', id: flight.id
+  end
+
+  def flight_params
+    params.require(:flight).permit(:name,
+                                   :no_of_seats,
+                                   :base_price,
+                                   :flys_at,
+                                   :lands_at,
+                                   :company_id)
   end
 end

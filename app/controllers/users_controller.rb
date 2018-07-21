@@ -15,11 +15,12 @@ class UsersController < ApplicationController
   end
 
   def create
-    user = User.new params[:user]
+    user = User.new(user_params)
+
     if user.save
-      redirect_to action: 'show', id: user.id
+      render json: user, status: :created
     else
-      render action: 'new'
+      render json: user.errors, status: :unprocessable_entity
     end
   end
 
@@ -36,5 +37,9 @@ class UsersController < ApplicationController
     user = User.find params[:id]
     return unless user.update(params[:user])
     redirect_to action: 'show', id: user.id
+  end
+
+  def user_params
+    params.require(:user).permit(:first_name, :last_name, :email)
   end
 end

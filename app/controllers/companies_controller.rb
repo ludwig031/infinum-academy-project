@@ -15,11 +15,12 @@ class CompaniesController < ApplicationController
   end
 
   def create
-    company = Company.new params[:company]
+    company = Company.new(company_params)
+
     if company.save
-      redirect_to action: 'show', id: company.id
+      render json: company, status: :created
     else
-      render action: 'new'
+      render json: company.errors, status: :unprocessable_entity
     end
   end
 
@@ -34,7 +35,11 @@ class CompaniesController < ApplicationController
 
   def update
     company = Company.find params[:id]
-    return unless company.update(params[:company])
+    return unless company.update(company_params)
     redirect_to action: 'show', id: company.id
+  end
+
+  def company_params
+    params.require(:company).permit(:name)
   end
 end
