@@ -43,6 +43,6 @@ class BookingsController < ApplicationController
     params.require(:booking).permit(:no_of_seats,
                                     :seat_price,
                                     :user_id,
-                                    :booking_id)
+                                    :flight_id)
   end
 end
