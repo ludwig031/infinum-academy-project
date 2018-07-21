@@ -20,7 +20,7 @@ class UsersController < ApplicationController
     if user.save
       render json: user, status: :created
     else
-      render json: user.errors, status: :unprocessable_entity
+      render json: user.errors, status: :bad_request
     end
   end
 
