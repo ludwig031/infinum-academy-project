@@ -20,7 +20,7 @@ class FlightsController < ApplicationController
     if flight.save
       render json: flight, status: :created
     else
-      render json: flight.errors, status: :bad_request
+      render json: { errors: flight.errors }, status: :bad_request
     end
   end
 
@@ -39,7 +39,7 @@ class FlightsController < ApplicationController
     if flight.update(flight_params)
       render json: flight, status: :ok
     else
-      render json: flight.errors, status: :bad_request
+      render json: { errors: flight.errors }, status: :bad_request
     end
   end
 
