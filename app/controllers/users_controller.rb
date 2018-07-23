@@ -1,11 +1,11 @@
 class UsersController < ApplicationController
   def index
-    render json: User.all, each_serializer: UserSerializer
+    render json: User.all
   end
 
   def show
     user = User.find(params[:id])
-    render json: user, serializer: UserSerializer
+    render json: user
   end
 
   def new

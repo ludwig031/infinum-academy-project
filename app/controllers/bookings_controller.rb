@@ -1,11 +1,11 @@
 class BookingsController < ApplicationController
   def index
-    render json: Booking.all, each_serializer: BookingSerializer
+    render json: Booking.all
   end
 
   def show
     booking = Booking.find(params[:id])
-    render json: booking, serializer: BookingSerializer
+    render json: booking
   end
 
   def new
