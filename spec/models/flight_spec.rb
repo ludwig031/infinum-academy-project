@@ -23,11 +23,7 @@ RSpec.describe Flight, type: :model do
 
   it 'flys_at before lands_at' do
     flight = FactoryBot.build(:flight,
-                              name: 'Idemo u Irsku',
-                              no_of_seats: 50,
-                              base_price: 100,
-                              flys_at: Time.zone.now + 5.hours,
-                              lands_at: Time.zone.now)
+                              flys_at: Time.zone.now + 5.hours)
     flight.valid?
     expect(flight.errors[:lands_at])
       .to include('take off time can not be after landing time')
