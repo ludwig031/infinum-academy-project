@@ -8,10 +8,6 @@ class FlightsController < ApplicationController
     render json: flight
   end
 
-  def new
-    Flight.new
-  end
-
   def create
     flight = Flight.new(flight_params)
 
@@ -25,10 +21,6 @@ class FlightsController < ApplicationController
   def destroy
     flight = Flight.find params[:id]
     flight.destroy
-  end
-
-  def edit
-    Flight.find params[:id]
   end
 
   def update

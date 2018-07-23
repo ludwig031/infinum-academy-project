@@ -8,10 +8,6 @@ class UsersController < ApplicationController
     render json: user
   end
 
-  def new
-    User.new
-  end
-
   def create
     user = User.new(user_params)
 
@@ -25,10 +21,6 @@ class UsersController < ApplicationController
   def destroy
     user = User.find params[:id]
     user.destroy
-  end
-
-  def edit
-    User.find params[:id]
   end
 
   def update

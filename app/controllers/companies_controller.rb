@@ -8,10 +8,6 @@ class CompaniesController < ApplicationController
     render json: company
   end
 
-  def new
-    Company.new
-  end
-
   def create
     company = Company.new(company_params)
 
@@ -25,10 +21,6 @@ class CompaniesController < ApplicationController
   def destroy
     company = Company.find params[:id]
     company.destroy
-  end
-
-  def edit
-    Company.find params[:id]
   end
 
   def update

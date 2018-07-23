@@ -8,10 +8,6 @@ class BookingsController < ApplicationController
     render json: booking
   end
 
-  def new
-    Booking.new
-  end
-
   def create
     booking = Booking.new(booking_params)
 
@@ -25,10 +21,6 @@ class BookingsController < ApplicationController
   def destroy
     booking = Booking.find params[:id]
     booking.destroy
-  end
-
-  def edit
-    Booking.find params[:id]
   end
 
   def update
