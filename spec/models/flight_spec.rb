@@ -1,9 +1,7 @@
 RSpec.describe Flight, type: :model do
   subject(:flight) { FactoryBot.build(:flight) }
 
-  it 'is invalid without an name' do
-    is_expected.to validate_presence_of(:name)
-  end
+  it is_expected.to validate_presence_of(:name)
 
   it 'is invalid without an taking off time' do
     is_expected.to validate_presence_of(:flys_at)
