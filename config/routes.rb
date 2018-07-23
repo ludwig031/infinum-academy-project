@@ -1,9 +1,9 @@
 Rails.application.routes.draw do
   scope :api do
-    resources :users
-    resources :companies
-    resources :flights
-    resources :bookings
+    resources :users , except: [:new, :edit]
+    resources :companies, except: [:new, :edit]
+    resources :flights, except: [:new, :edit]
+    resources :bookings, except: [:new, :edit]
   end
 
   ActiveAdmin.routes(self)
