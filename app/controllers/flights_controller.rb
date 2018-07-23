@@ -1,12 +1,10 @@
 class FlightsController < ApplicationController
   def index
-    params.permit
     render json: Flight.all, each_serializer: FlightSerializer
   end
 
   def show
     flight = Flight.find(params[:id])
-    params.permit
     render json: flight, serializer: FlightSerializer
   end
 

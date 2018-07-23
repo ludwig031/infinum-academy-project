@@ -1,12 +1,10 @@
 class CompaniesController < ApplicationController
   def index
-    params.permit
     render json: Company.all, each_serializer: CompanySerializer
   end
 
   def show
     company = Company.find(params[:id])
-    params.permit
     render json: company, serializer: CompanySerializer
   end
 
