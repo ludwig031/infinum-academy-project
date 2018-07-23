@@ -1,5 +1,5 @@
 Rails.application.routes.draw do
-  scope :api do
+  namespace :api do
     resources :users , except: [:new, :edit]
     resources :companies, except: [:new, :edit]
     resources :flights, except: [:new, :edit]
