@@ -27,7 +27,7 @@ class BookingsController < ApplicationController
     booking = Booking.find params[:id]
 
     if booking.update(booking_params)
-      render json: booking, status: :ok
+      render json: booking
     else
       render json: { errors: booking.errors }, status: :bad_request
     end
