@@ -1,4 +1,6 @@
 RSpec.describe 'Users API', type: :request do
+  include TestHelpers::JsonResponse
+
   describe 'GET #index' do
     let(:users) { FactoryBot.create_list(:user, 3) }
 
@@ -11,7 +13,6 @@ RSpec.describe 'Users API', type: :request do
 
     it 'returns list of users' do
       get '/api/users'
-      json_body = JSON.parse(response.body)
       expect(json_body['users'].length).to eq 3
     end
   end
@@ -26,7 +27,6 @@ RSpec.describe 'Users API', type: :request do
 
     it 'returns a single user' do
       get "/api/users/#{user.id}", params: { id: user.id }
-      json_body = JSON.parse(response.body)
       expect(json_body).to include('user')
     end
   end
@@ -48,7 +48,6 @@ RSpec.describe 'Users API', type: :request do
                                last_name: 'Ludwig',
                                email: 'mail-2@mail.com' } }
 
-        json_body = JSON.parse(response.body)
         expect(json_body).to include('user' => include('last_name' => 'Ludwig'))
       end
     end
@@ -63,7 +62,6 @@ RSpec.describe 'Users API', type: :request do
       it 'returns all errors' do
         post '/api/users', params: { user: { first_name: '' } }
 
-        json_body = JSON.parse(response.body)
         expect(json_body).to include('errors')
       end
     end
@@ -86,7 +84,6 @@ RSpec.describe 'Users API', type: :request do
             params: { id: user.id,
                       user: { first_name: 'Ime' } }
 
-        json_body = JSON.parse(response.body)
         expect(json_body).to include('user' => include('first_name' => 'Ime'))
       end
     end
@@ -105,7 +102,6 @@ RSpec.describe 'Users API', type: :request do
             params: { id: user.id,
                       user: { first_name: '' } }
 
-        json_body = JSON.parse(response.body)
         expect(json_body).to include('errors')
       end
     end

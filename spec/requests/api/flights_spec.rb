@@ -1,4 +1,6 @@
 RSpec.describe 'Flights API', type: :request do
+  include TestHelpers::JsonResponse
+
   describe 'GET #index' do
     let(:flights) { FactoryBot.create_list(:flight, 3) }
 
@@ -11,7 +13,6 @@ RSpec.describe 'Flights API', type: :request do
 
     it 'returns list of flights' do
       get '/api/flights'
-      json_body = JSON.parse(response.body)
       expect(json_body['flights'].length).to eq 3
     end
   end
@@ -26,7 +27,6 @@ RSpec.describe 'Flights API', type: :request do
 
     it 'returns a single flight' do
       get "/api/flights/#{flight.id}", params: { id: flight.id }
-      json_body = JSON.parse(response.body)
       expect(json_body).to include('flight')
     end
   end
@@ -56,7 +56,6 @@ RSpec.describe 'Flights API', type: :request do
                                  no_of_seats: 200,
                                  company_id: company.id } }
 
-        json_body = JSON.parse(response.body)
         expect(json_body).to include('flight' =>
                                          include('name' => 'Drugi let za doma'))
       end
@@ -72,7 +71,6 @@ RSpec.describe 'Flights API', type: :request do
       it 'returns all errors' do
         post '/api/flights', params: { flight: { name: '' } }
 
-        json_body = JSON.parse(response.body)
         expect(json_body).to include('errors')
       end
     end
@@ -93,7 +91,6 @@ RSpec.describe 'Flights API', type: :request do
         put "/api/flights/#{flight.id}",
             params: { id: flight.id, flight: { name: 'Ryanair' } }
 
-        json_body = JSON.parse(response.body)
         expect(json_body).to include('flight' => include('name' => 'Ryanair'))
       end
     end
@@ -110,7 +107,6 @@ RSpec.describe 'Flights API', type: :request do
         put "/api/flights/#{flight.id}",
             params: { id: flight.id, flight: { name: '' } }
 
-        json_body = JSON.parse(response.body)
         expect(json_body).to include('errors')
       end
     end

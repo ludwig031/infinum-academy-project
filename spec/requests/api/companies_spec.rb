@@ -1,4 +1,6 @@
 RSpec.describe 'Companies API', type: :request do
+  include TestHelpers::JsonResponse
+
   describe 'GET #index' do
     let(:companies) { FactoryBot.create_list(:company, 3) }
 
@@ -11,7 +13,6 @@ RSpec.describe 'Companies API', type: :request do
 
     it 'returns list of companies' do
       get '/api/companies'
-      json_body = JSON.parse(response.body)
       expect(json_body['companies'].length).to eq 3
     end
   end
@@ -26,7 +27,6 @@ RSpec.describe 'Companies API', type: :request do
 
     it 'returns a single company' do
       get "/api/companies/#{company.id}"
-      json_body = JSON.parse(response.body)
       expect(json_body).to include('company')
     end
   end
@@ -42,7 +42,6 @@ RSpec.describe 'Companies API', type: :request do
       it 'creates and returns a new company' do
         post '/api/companies', params: { company: { name: 'Ryanair' } }
 
-        json_body = JSON.parse(response.body)
         expect(json_body).to include('company' => include('name' => 'Ryanair'))
       end
     end
@@ -57,7 +56,6 @@ RSpec.describe 'Companies API', type: :request do
       it 'returns all errors' do
         post '/api/companies', params: { company: { name: '' } }
 
-        json_body = JSON.parse(response.body)
         expect(json_body).to include('errors')
       end
     end
@@ -78,7 +76,6 @@ RSpec.describe 'Companies API', type: :request do
         put "/api/companies/#{company.id}",
             params: { id: company.id, company: { name: 'Ryanair' } }
 
-        json_body = JSON.parse(response.body)
         expect(json_body).to include('company' => include('name' => 'Ryanair'))
       end
     end
@@ -95,7 +92,6 @@ RSpec.describe 'Companies API', type: :request do
         put "/api/companies/#{company.id}",
             params: { id: company.id, company: { name: '' } }
 
-        json_body = JSON.parse(response.body)
         expect(json_body).to include('errors')
       end
     end

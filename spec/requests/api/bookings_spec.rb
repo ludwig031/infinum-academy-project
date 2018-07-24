@@ -1,4 +1,6 @@
 RSpec.describe 'Bookings API', type: :request do
+  include TestHelpers::JsonResponse
+
   describe 'GET #index' do
     let(:bookings) { FactoryBot.create_list(:booking, 3) }
 
@@ -11,7 +13,6 @@ RSpec.describe 'Bookings API', type: :request do
 
     it 'returns list of bookings' do
       get '/api/bookings'
-      json_body = JSON.parse(response.body)
       expect(json_body['bookings'].length).to eq 3
     end
   end
@@ -26,7 +27,6 @@ RSpec.describe 'Bookings API', type: :request do
 
     it 'returns a single booking' do
       get "/api/bookings/#{booking.id}", params: { id: booking.id }
-      json_body = JSON.parse(response.body)
       expect(json_body).to include('booking')
     end
   end
@@ -51,7 +51,6 @@ RSpec.describe 'Bookings API', type: :request do
                                                    flight_id: flight.id,
                                                    user_id: user.id } }
 
-        json_body = JSON.parse(response.body)
         expect(json_body).to include('booking' => include('seat_price' => 2))
       end
     end
@@ -66,7 +65,6 @@ RSpec.describe 'Bookings API', type: :request do
       it 'returns all errors' do
         post '/api/bookings', params: { booking: { seat_price: '' } }
 
-        json_body = JSON.parse(response.body)
         expect(json_body).to include('errors')
       end
     end
@@ -87,7 +85,6 @@ RSpec.describe 'Bookings API', type: :request do
         put "/api/bookings/#{booking.id}",
             params: { id: booking.id, booking: { seat_price: 25 } }
 
-        json_body = JSON.parse(response.body)
         expect(json_body).to include('booking' => include('seat_price' => 25))
       end
     end
@@ -104,7 +101,6 @@ RSpec.describe 'Bookings API', type: :request do
         put "/api/bookings/#{booking.id}",
             params: { id: booking.id, booking: { seat_price: '' } }
 
-        json_body = JSON.parse(response.body)
         expect(json_body).to include('errors')
       end
     end
