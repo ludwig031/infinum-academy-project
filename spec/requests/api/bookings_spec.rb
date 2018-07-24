@@ -123,5 +123,11 @@ RSpec.describe 'Bookings API', type: :request do
 
       expect(response).to have_http_status(:no_content)
     end
+
+    it 'decrements bookings count by one' do
+      expect do
+        delete "/api/bookings/#{booking.id}", params: { id: booking.id }
+      end.to change(Booking, :count).by(-1)
+    end
   end
 end
