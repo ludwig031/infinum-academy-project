@@ -47,6 +47,18 @@ RSpec.describe 'Flights API', type: :request do
         expect(response).to have_http_status(:created)
       end
 
+      it 'changes flights count by one' do
+        expect do
+          post '/api/flights',
+               params: { flight: {  name: 'Let za doma',
+                                    flys_at: Time.zone.now + 1.hour,
+                                    lands_at: Time.zone.now + 2.hours,
+                                    base_price: 100,
+                                    no_of_seats: 200,
+                                    company_id: company.id } }
+        end.to change(Flight, :count).by(+1)
+      end
+
       it 'creates and returns a new flight' do
         post '/api/flights',
              params: { flight: { name: 'Drugi let za doma',

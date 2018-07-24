@@ -42,11 +42,20 @@ RSpec.describe 'Users API', type: :request do
         expect(response).to have_http_status(:created)
       end
 
+      it 'changes users count by one' do
+        expect do
+          post '/api/users',
+               params: { user: { first_name: 'Ljudevit',
+                                 last_name: 'Ludwig',
+                                 email: 'mail-2@mail.com' } }
+        end.to change(User, :count).by(+1)
+      end
+
       it 'creates and returns a new user' do
         post '/api/users',
              params: { user: { first_name: 'Ljudevit',
                                last_name: 'Ludwig',
-                               email: 'mail-2@mail.com' } }
+                               email: 'mail-3@mail.com' } }
 
         expect(json_body).to include('user' => include('last_name' => 'Ludwig'))
       end

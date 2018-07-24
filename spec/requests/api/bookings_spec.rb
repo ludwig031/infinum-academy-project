@@ -45,6 +45,15 @@ RSpec.describe 'Bookings API', type: :request do
         expect(response).to have_http_status(:created)
       end
 
+      it 'changes bookings count by one' do
+        expect do
+          post '/api/bookings', params: { booking: { no_of_seats: 1,
+                                                     seat_price: 2,
+                                                     flight_id: flight.id,
+                                                     user_id: user.id } }
+        end.to change(Booking, :count).by(+1)
+      end
+
       it 'creates and returns a new booking' do
         post '/api/bookings', params: { booking: { no_of_seats: 1,
                                                    seat_price: 2,

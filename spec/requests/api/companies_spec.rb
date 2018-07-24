@@ -39,6 +39,12 @@ RSpec.describe 'Companies API', type: :request do
         expect(response).to have_http_status(:created)
       end
 
+      it 'changes companies count by one' do
+        expect do
+          post '/api/companies', params: { company: { name: 'Lufthansa' } }
+        end.to change(Company, :count).by(+1)
+      end
+
       it 'creates and returns a new company' do
         post '/api/companies', params: { company: { name: 'Ryanair' } }
 
