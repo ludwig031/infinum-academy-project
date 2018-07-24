@@ -1,15 +1,18 @@
-RSpec.describe FlightsController, type: :controller do
+RSpec.describe 'Flights API', type: :request do
   describe 'GET #index' do
-    let(:flights) { FactoryBot.create_list(:flight) }
+    let(:flights) { FactoryBot.create_list(:flight, 3) }
+
+    before { flights }
 
     it 'returns http success' do
-      get :index
+      get '/api/flights'
       expect(response).to have_http_status(:success)
     end
 
     it 'returns list of flights' do
-      get :index
-      expect(response).to be_success
+      get '/api/flights'
+      json_body = JSON.parse(response.body)
+      expect(json_body['flights'].length).to eq 3
     end
   end
 
@@ -17,12 +20,12 @@ RSpec.describe FlightsController, type: :controller do
     let(:flight) { FactoryBot.create(:flight) }
 
     it 'returns http success' do
-      get :show, params: { id: flight.id }
+      get "/api/flights/#{flight.id}", params: { id: flight.id }
       expect(response).to have_http_status(:success)
     end
 
     it 'returns a single flight' do
-      get :show, params: { id: flight.id }
+      get "/api/flights/#{flight.id}", params: { id: flight.id }
       json_body = JSON.parse(response.body)
       expect(json_body).to include('flight')
     end
@@ -33,23 +36,25 @@ RSpec.describe FlightsController, type: :controller do
       let(:company) { FactoryBot.create(:company) }
 
       it 'returns 201' do
-        post :create, params: { flight: { name: 'Let za doma',
-                                          flys_at: Time.zone.now + 1.hour,
-                                          lands_at: Time.zone.now + 2.hours,
-                                          base_price: 100,
-                                          no_of_seats: 200,
-                                          company_id: company.id } }
+        post '/api/flights',
+             params: { flight: {  name: 'Let za doma',
+                                  flys_at: Time.zone.now + 1.hour,
+                                  lands_at: Time.zone.now + 2.hours,
+                                  base_price: 100,
+                                  no_of_seats: 200,
+                                  company_id: company.id } }
 
         expect(response).to have_http_status(:created)
       end
 
       it 'creates and returns a new flight' do
-        post :create, params: { flight: { name: 'Drugi let za doma',
-                                          flys_at: Time.zone.now + 1.hour,
-                                          lands_at: Time.zone.now + 2.hours,
-                                          base_price: 100,
-                                          no_of_seats: 200,
-                                          company_id: company.id } }
+        post '/api/flights',
+             params: { flight: { name: 'Drugi let za doma',
+                                 flys_at: Time.zone.now + 1.hour,
+                                 lands_at: Time.zone.now + 2.hours,
+                                 base_price: 100,
+                                 no_of_seats: 200,
+                                 company_id: company.id } }
 
         json_body = JSON.parse(response.body)
         expect(json_body).to include('flight' =>
@@ -59,13 +64,13 @@ RSpec.describe FlightsController, type: :controller do
 
     context 'when params are invalid' do
       it 'returns 400 Bad Request' do
-        post :create, params: { flight: { name: '' } }
+        post '/api/flights', params: { flight: { name: '' } }
 
         expect(response).to have_http_status(:bad_request)
       end
 
       it 'returns all errors' do
-        post :create, params: { flight: { name: '' } }
+        post '/api/flights', params: { flight: { name: '' } }
 
         json_body = JSON.parse(response.body)
         expect(json_body).to include('errors')
@@ -78,15 +83,15 @@ RSpec.describe FlightsController, type: :controller do
 
     context 'when params are valid' do
       it 'returns 200 OK' do
-        post :update, params: { id: flight.id,
-                                flight: { name: 'Lufthansa' } }
+        put "/api/flights/#{flight.id}",
+            params: { id: flight.id, flight: { name: 'Lufthansa' } }
 
         expect(response).to have_http_status(:success)
       end
 
       it 'returns a created booking' do
-        post :update, params: { id: flight.id,
-                                flight: { name: 'Ryanair' } }
+        put "/api/flights/#{flight.id}",
+            params: { id: flight.id, flight: { name: 'Ryanair' } }
 
         json_body = JSON.parse(response.body)
         expect(json_body).to include('flight' => include('name' => 'Ryanair'))
@@ -95,15 +100,15 @@ RSpec.describe FlightsController, type: :controller do
 
     context 'when params are invalid' do
       it 'returns 400 Bad Request' do
-        post :update, params: { id: flight.id,
-                                flight: { name: '' } }
+        put "/api/flights/#{flight.id}",
+            params: { id: flight.id, flight: { name: '' } }
 
         expect(response).to have_http_status(:bad_request)
       end
 
       it 'returns all errors' do
-        post :update, params: { id: flight.id,
-                                flight: { name: '' } }
+        put "/api/flights/#{flight.id}",
+            params: { id: flight.id, flight: { name: '' } }
 
         json_body = JSON.parse(response.body)
         expect(json_body).to include('errors')
@@ -115,7 +120,7 @@ RSpec.describe FlightsController, type: :controller do
     let(:flight) { FactoryBot.create(:flight) }
 
     it 'returns 204 No Content' do
-      post :destroy, params: { id: flight.id }
+      delete "/api/flights/#{flight.id}", params: { id: flight.id }
 
       expect(response).to have_http_status(:no_content)
     end

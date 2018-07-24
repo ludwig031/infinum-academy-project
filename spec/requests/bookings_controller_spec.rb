@@ -1,15 +1,18 @@
-RSpec.describe BookingsController, type: :controller do
+RSpec.describe 'Bookings API', type: :request do
   describe 'GET #index' do
-    let(:bookings) { FactoryBot.create_list(:booking) }
+    let(:bookings) { FactoryBot.create_list(:booking, 3) }
+
+    before { bookings }
 
     it 'returns http success' do
-      get :index
+      get '/api/bookings'
       expect(response).to have_http_status(:success)
     end
 
     it 'returns list of bookings' do
-      get :index
-      expect(response).to be_success
+      get '/api/bookings'
+      json_body = JSON.parse(response.body)
+      expect(json_body['bookings'].length).to eq 3
     end
   end
 
@@ -17,12 +20,12 @@ RSpec.describe BookingsController, type: :controller do
     let(:booking) { FactoryBot.create(:booking) }
 
     it 'returns http success' do
-      get :show, params: { id: booking.id }
+      get "/api/bookings/#{booking.id}", params: { id: booking.id }
       expect(response).to have_http_status(:success)
     end
 
     it 'returns a single booking' do
-      get :show, params: { id: booking.id }
+      get "/api/bookings/#{booking.id}", params: { id: booking.id }
       json_body = JSON.parse(response.body)
       expect(json_body).to include('booking')
     end
@@ -34,19 +37,19 @@ RSpec.describe BookingsController, type: :controller do
       let(:user) { FactoryBot.create(:user) }
 
       it 'returns 201' do
-        post :create, params: { booking: { no_of_seats: 1,
-                                           seat_price: 2,
-                                           flight_id: flight.id,
-                                           user_id: user.id } }
+        post '/api/bookings', params: { booking: { no_of_seats: 1,
+                                                   seat_price: 2,
+                                                   flight_id: flight.id,
+                                                   user_id: user.id } }
 
         expect(response).to have_http_status(:created)
       end
 
       it 'creates and returns a new booking' do
-        post :create, params: { booking: { no_of_seats: 1,
-                                           seat_price: 2,
-                                           flight_id: flight.id,
-                                           user_id: user.id } }
+        post '/api/bookings', params: { booking: { no_of_seats: 1,
+                                                   seat_price: 2,
+                                                   flight_id: flight.id,
+                                                   user_id: user.id } }
 
         json_body = JSON.parse(response.body)
         expect(json_body).to include('booking' => include('seat_price' => 2))
@@ -55,13 +58,13 @@ RSpec.describe BookingsController, type: :controller do
 
     context 'when params are invalid' do
       it 'returns 400 Bad Request' do
-        post :create, params: { booking: { seat_price: '' } }
+        post '/api/bookings', params: { booking: { seat_price: '' } }
 
         expect(response).to have_http_status(:bad_request)
       end
 
       it 'returns all errors' do
-        post :create, params: { booking: { seat_price: '' } }
+        post '/api/bookings', params: { booking: { seat_price: '' } }
 
         json_body = JSON.parse(response.body)
         expect(json_body).to include('errors')
@@ -74,15 +77,15 @@ RSpec.describe BookingsController, type: :controller do
 
     context 'when params are valid' do
       it 'returns 200 OK' do
-        post :update, params: { id: booking.id,
-                                booking: { seat_price: 5 } }
+        put "/api/bookings/#{booking.id}",
+            params: { id: booking.id, booking: { seat_price: 5 } }
 
         expect(response).to have_http_status(:success)
       end
 
       it 'returns a created booking' do
-        post :update, params: { id: booking.id,
-                                booking: { seat_price: 25 } }
+        put "/api/bookings/#{booking.id}",
+            params: { id: booking.id, booking: { seat_price: 25 } }
 
         json_body = JSON.parse(response.body)
         expect(json_body).to include('booking' => include('seat_price' => 25))
@@ -91,15 +94,15 @@ RSpec.describe BookingsController, type: :controller do
 
     context 'when params are invalid' do
       it 'returns 400 Bad Request' do
-        post :update, params: { id: booking.id,
-                                booking: { seat_price: '' } }
+        put "/api/bookings/#{booking.id}",
+            params: { id: booking.id, booking: { seat_price: '' } }
 
         expect(response).to have_http_status(:bad_request)
       end
 
       it 'returns all errors' do
-        post :update, params: { id: booking.id,
-                                booking: { seat_price: '' } }
+        put "/api/bookings/#{booking.id}",
+            params: { id: booking.id, booking: { seat_price: '' } }
 
         json_body = JSON.parse(response.body)
         expect(json_body).to include('errors')
@@ -111,7 +114,7 @@ RSpec.describe BookingsController, type: :controller do
     let(:booking) { FactoryBot.create(:booking) }
 
     it 'returns 204 No Content' do
-      post :destroy, params: { id: booking.id }
+      delete "/api/bookings/#{booking.id}", params: { id: booking.id }
 
       expect(response).to have_http_status(:no_content)
     end
