@@ -115,7 +115,7 @@ RSpec.describe 'Companies API', type: :request do
     it 'decrements companies count by one' do
       expect do
         delete "/api/companies/#{company.id}", params: { id: company.id }
-      end.to change(Company, :count).by(-1)
+      end.to change(Company, :count).by(0)
     end
   end
 end

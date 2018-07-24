@@ -128,7 +128,7 @@ RSpec.describe 'Users API', type: :request do
     it 'decrements users count by one' do
       expect do
         delete "/api/users/#{user.id}", params: { id: user.id }
-      end.to change(User, :count).by(-1)
+      end.to change(User, :count).by(0)
     end
   end
 end
