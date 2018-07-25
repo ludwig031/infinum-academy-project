@@ -34,6 +34,8 @@ module Api
       end
     end
 
+    private
+
     def booking_params
       params.require(:booking).permit(:no_of_seats,
                                       :seat_price,

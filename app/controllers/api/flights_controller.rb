@@ -34,6 +34,8 @@ module Api
       end
     end
 
+    private
+
     def flight_params
       params.require(:flight).permit(:name,
                                      :no_of_seats,
