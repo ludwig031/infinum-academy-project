@@ -13,6 +13,5 @@ class User < ApplicationRecord
             uniqueness: { case_sensitive: false },
             format: /\A[^@\s]+@([^@\s]+\.)+[^@\s]+\z/
   validates :password,
-            presence: true,
-            on: :create
+            presence: true
 end

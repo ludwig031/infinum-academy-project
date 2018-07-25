@@ -1,8 +1,10 @@
 class AddPasswordToUsers < ActiveRecord::Migration[5.2]
   def up
-    add_column :users do
-      string 'password_digest', default: 'defaultPassword', null: false
-    end
+    add_column :users,
+               :password_digest,
+               :string,
+               default: 'defaultPassword',
+               null: false
   end
 
   def down
