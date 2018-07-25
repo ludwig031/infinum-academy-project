@@ -37,7 +37,8 @@ RSpec.describe 'Users API', type: :request do
         post '/api/users',
              params: { user: { first_name: 'Ljudevit',
                                last_name: 'Ludwig',
-                               email: 'mail-1@mail.com' } }
+                               email: 'mail-1@mail.com',
+                               password: 'password' } }
 
         expect(response).to have_http_status(:created)
       end
@@ -47,7 +48,8 @@ RSpec.describe 'Users API', type: :request do
           post '/api/users',
                params: { user: { first_name: 'Ljudevit',
                                  last_name: 'Ludwig',
-                                 email: 'mail-2@mail.com' } }
+                                 email: 'mail-2@mail.com',
+                                 password: 'password' } }
         end.to change(User, :count).by(+1)
       end
 
@@ -55,9 +57,22 @@ RSpec.describe 'Users API', type: :request do
         post '/api/users',
              params: { user: { first_name: 'Ljudevit',
                                last_name: 'Ludwig',
-                               email: 'mail-3@mail.com' } }
+                               email: 'mail-3@mail.com',
+                               password: 'password' } }
 
         expect(json_body).to include('user' => include('last_name' => 'Ludwig'))
+      end
+
+      it 'can authenticate' do
+        post '/api/users',
+             params: { user: { first_name: 'Ljudevit',
+                               last_name: 'Ludwig',
+                               email: 'mail-3@mail.com',
+                               password: 'password' } }
+
+        user = User.find_by(id: json_body['user']['id'])
+        auth_user = user.try(:authenticate, 'password')
+        expect(user).to eq(auth_user)
       end
     end
 
@@ -82,14 +97,14 @@ RSpec.describe 'Users API', type: :request do
     context 'when params are valid' do
       it 'returns 200 OK' do
         put "/api/users/#{user.id}",
-            params: { user: { first_name: 'Ime' } }
+            params: { user: { password: 'Lozinka' } }
 
         expect(response).to have_http_status(:success)
       end
 
-      it 'returns a created booking' do
+      it 'returns a updated user' do
         put "/api/users/#{user.id}",
-            params: { user: { first_name: 'Ime' } }
+            params: { user: { first_name: 'Ime', password: 'Lozinka' } }
 
         expect(json_body).to include('user' => include('first_name' => 'Ime'))
       end
