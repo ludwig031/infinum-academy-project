@@ -21,12 +21,12 @@ RSpec.describe 'Flights API', type: :request do
     let(:flight) { FactoryBot.create(:flight) }
 
     it 'returns http success' do
-      get "/api/flights/#{flight.id}", params: { id: flight.id }
+      get "/api/flights/#{flight.id}"
       expect(response).to have_http_status(:success)
     end
 
     it 'returns a single flight' do
-      get "/api/flights/#{flight.id}", params: { id: flight.id }
+      get "/api/flights/#{flight.id}"
       expect(json_body).to include('flight')
     end
   end
@@ -94,14 +94,14 @@ RSpec.describe 'Flights API', type: :request do
     context 'when params are valid' do
       it 'returns 200 OK' do
         put "/api/flights/#{flight.id}",
-            params: { id: flight.id, flight: { name: 'Lufthansa' } }
+            params: { flight: { name: 'Lufthansa' } }
 
         expect(response).to have_http_status(:success)
       end
 
       it 'returns a created booking' do
         put "/api/flights/#{flight.id}",
-            params: { id: flight.id, flight: { name: 'Ryanair' } }
+            params: { flight: { name: 'Ryanair' } }
 
         expect(json_body).to include('flight' => include('name' => 'Ryanair'))
       end
@@ -110,14 +110,14 @@ RSpec.describe 'Flights API', type: :request do
     context 'when params are invalid' do
       it 'returns 400 Bad Request' do
         put "/api/flights/#{flight.id}",
-            params: { id: flight.id, flight: { name: '' } }
+            params: { flight: { name: '' } }
 
         expect(response).to have_http_status(:bad_request)
       end
 
       it 'returns all errors' do
         put "/api/flights/#{flight.id}",
-            params: { id: flight.id, flight: { name: '' } }
+            params: { flight: { name: '' } }
 
         expect(json_body).to include('errors')
       end
@@ -128,14 +128,14 @@ RSpec.describe 'Flights API', type: :request do
     let(:flight) { FactoryBot.create(:flight) }
 
     it 'returns 204 No Content' do
-      delete "/api/flights/#{flight.id}", params: { id: flight.id }
+      delete "/api/flights/#{flight.id}"
 
       expect(response).to have_http_status(:no_content)
     end
 
     it 'decrements flights count by one' do
       expect do
-        delete "/api/flights/#{flight.id}", params: { id: flight.id }
+        delete "/api/flights/#{flight.id}"
       end.to change(Flight, :count).by(0)
     end
   end

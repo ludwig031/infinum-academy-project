@@ -73,14 +73,14 @@ RSpec.describe 'Companies API', type: :request do
     context 'when params are valid' do
       it 'returns 200 OK' do
         put "/api/companies/#{company.id}",
-            params: { id: company.id, company: { name: 'Lufthansa' } }
+            params: { company: { name: 'Lufthansa' } }
 
         expect(response).to have_http_status(:success)
       end
 
       it 'returns a created booking' do
         put "/api/companies/#{company.id}",
-            params: { id: company.id, company: { name: 'Ryanair' } }
+            params: { company: { name: 'Ryanair' } }
 
         expect(json_body).to include('company' => include('name' => 'Ryanair'))
       end
@@ -89,14 +89,14 @@ RSpec.describe 'Companies API', type: :request do
     context 'when params are invalid' do
       it 'returns 400 Bad Request' do
         put "/api/companies/#{company.id}",
-            params: { id: company.id, company: { name: '' } }
+            params: { company: { name: '' } }
 
         expect(response).to have_http_status(:bad_request)
       end
 
       it 'returns all errors' do
         put "/api/companies/#{company.id}",
-            params: { id: company.id, company: { name: '' } }
+            params: { company: { name: '' } }
 
         expect(json_body).to include('errors')
       end
@@ -107,14 +107,14 @@ RSpec.describe 'Companies API', type: :request do
     let(:company) { FactoryBot.create(:company) }
 
     it 'returns 204 No Content' do
-      delete "/api/companies/#{company.id}", params: { id: company.id }
+      delete "/api/companies/#{company.id}"
 
       expect(response).to have_http_status(:no_content)
     end
 
     it 'decrements companies count by one' do
       expect do
-        delete "/api/companies/#{company.id}", params: { id: company.id }
+        delete "/api/companies/#{company.id}"
       end.to change(Company, :count).by(0)
     end
   end

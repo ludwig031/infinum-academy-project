@@ -21,12 +21,12 @@ RSpec.describe 'Users API', type: :request do
     let(:user) { FactoryBot.create(:user) }
 
     it 'returns http success' do
-      get "/api/users/#{user.id}", params: { id: user.id }
+      get "/api/users/#{user.id}"
       expect(response).to have_http_status(:success)
     end
 
     it 'returns a single user' do
-      get "/api/users/#{user.id}", params: { id: user.id }
+      get "/api/users/#{user.id}"
       expect(json_body).to include('user')
     end
   end
@@ -82,16 +82,14 @@ RSpec.describe 'Users API', type: :request do
     context 'when params are valid' do
       it 'returns 200 OK' do
         put "/api/users/#{user.id}",
-            params: { id: user.id,
-                      user: { first_name: 'Ime' } }
+            params: { user: { first_name: 'Ime' } }
 
         expect(response).to have_http_status(:success)
       end
 
       it 'returns a created booking' do
         put "/api/users/#{user.id}",
-            params: { id: user.id,
-                      user: { first_name: 'Ime' } }
+            params: { user: { first_name: 'Ime' } }
 
         expect(json_body).to include('user' => include('first_name' => 'Ime'))
       end
@@ -100,16 +98,14 @@ RSpec.describe 'Users API', type: :request do
     context 'when params are invalid' do
       it 'returns 400 Bad Request' do
         put "/api/users/#{user.id}",
-            params: { id: user.id,
-                      user: { first_name: '' } }
+            params: { user: { first_name: '' } }
 
         expect(response).to have_http_status(:bad_request)
       end
 
       it 'returns all errors' do
         put "/api/users/#{user.id}",
-            params: { id: user.id,
-                      user: { first_name: '' } }
+            params: { user: { first_name: '' } }
 
         expect(json_body).to include('errors')
       end
@@ -120,14 +116,14 @@ RSpec.describe 'Users API', type: :request do
     let(:user) { FactoryBot.create(:user) }
 
     it 'returns 204 No Content' do
-      delete "/api/users/#{user.id}", params: { id: user.id }
+      delete "/api/users/#{user.id}"
 
       expect(response).to have_http_status(:no_content)
     end
 
     it 'decrements users count by one' do
       expect do
-        delete "/api/users/#{user.id}", params: { id: user.id }
+        delete "/api/users/#{user.id}"
       end.to change(User, :count).by(0)
     end
   end

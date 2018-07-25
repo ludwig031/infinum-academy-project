@@ -21,12 +21,12 @@ RSpec.describe 'Bookings API', type: :request do
     let(:booking) { FactoryBot.create(:booking) }
 
     it 'returns http success' do
-      get "/api/bookings/#{booking.id}", params: { id: booking.id }
+      get "/api/bookings/#{booking.id}"
       expect(response).to have_http_status(:success)
     end
 
     it 'returns a single booking' do
-      get "/api/bookings/#{booking.id}", params: { id: booking.id }
+      get "/api/bookings/#{booking.id}"
       expect(json_body).to include('booking')
     end
   end
@@ -85,14 +85,14 @@ RSpec.describe 'Bookings API', type: :request do
     context 'when params are valid' do
       it 'returns 200 OK' do
         put "/api/bookings/#{booking.id}",
-            params: { id: booking.id, booking: { seat_price: 5 } }
+            params: { booking: { seat_price: 5 } }
 
         expect(response).to have_http_status(:success)
       end
 
       it 'returns a created booking' do
         put "/api/bookings/#{booking.id}",
-            params: { id: booking.id, booking: { seat_price: 25 } }
+            params: { booking: { seat_price: 25 } }
 
         expect(json_body).to include('booking' => include('seat_price' => 25))
       end
@@ -101,14 +101,14 @@ RSpec.describe 'Bookings API', type: :request do
     context 'when params are invalid' do
       it 'returns 400 Bad Request' do
         put "/api/bookings/#{booking.id}",
-            params: { id: booking.id, booking: { seat_price: '' } }
+            params: { booking: { seat_price: '' } }
 
         expect(response).to have_http_status(:bad_request)
       end
 
       it 'returns all errors' do
         put "/api/bookings/#{booking.id}",
-            params: { id: booking.id, booking: { seat_price: '' } }
+            params: { booking: { seat_price: '' } }
 
         expect(json_body).to include('errors')
       end
@@ -119,14 +119,14 @@ RSpec.describe 'Bookings API', type: :request do
     let(:booking) { FactoryBot.create(:booking) }
 
     it 'returns 204 No Content' do
-      delete "/api/bookings/#{booking.id}", params: { id: booking.id }
+      delete "/api/bookings/#{booking.id}"
 
       expect(response).to have_http_status(:no_content)
     end
 
     it 'decrements bookings count by one' do
       expect do
-        delete "/api/bookings/#{booking.id}", params: { id: booking.id }
+        delete "/api/bookings/#{booking.id}"
       end.to change(Booking, :count).by(0)
     end
   end
