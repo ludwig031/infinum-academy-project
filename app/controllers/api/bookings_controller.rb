@@ -20,12 +20,12 @@ module Api
     end
 
     def destroy
-      booking = Booking.find params[:id]
+      booking = Booking.find(params[:id])
       booking.destroy
     end
 
     def update
-      booking = Booking.find params[:id]
+      booking = Booking.find(params[:id])
 
       if booking.update(booking_params)
         render json: booking

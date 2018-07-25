@@ -20,12 +20,12 @@ module Api
     end
 
     def destroy
-      flight = Flight.find params[:id]
+      flight = Flight.find(params[:id])
       flight.destroy
     end
 
     def update
-      flight = Flight.find params[:id]
+      flight = Flight.find(params[:id])
 
       if flight.update(flight_params)
         render json: flight
