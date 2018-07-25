@@ -1,10 +1,11 @@
 module Api
   class SessionController < ApplicationController
     def create
-      user = User.find_by(email: params[:email])
-                 .try(:authenticate, params[:password])
+      user = User.find_by(email: params[:session][:email])
+                 .try(:authenticate, params[:session][:password])
 
       if user
+        # render json: user, status: :created
         render json: Session.new(user: user, token: user.token),
                adapter: :json,
                status: :created

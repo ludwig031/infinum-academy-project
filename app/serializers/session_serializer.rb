@@ -1,7 +1,11 @@
 class SessionSerializer < ActiveModel::Serializer
-  attribute :token
-  attribute :user
-  def user
-    UserSerializer.new(self).attributes
+  class CustomUserSerializer < UserSerializer
+    attribute :id
+    attribute :first_name
+    attribute :last_name
+    attribute :email
   end
+
+  attribute :token
+  has_one :user, serializer: CustomUserSerializer
 end
