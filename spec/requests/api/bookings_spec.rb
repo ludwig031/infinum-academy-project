@@ -125,9 +125,10 @@ RSpec.describe 'Bookings API', type: :request do
     end
 
     it 'decrements bookings count by one' do
+      booking
       expect do
         delete "/api/bookings/#{booking.id}"
-      end.to change(Booking, :count).by(0)
+      end.to change(Booking, :count).by(-1)
     end
   end
 end

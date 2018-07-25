@@ -134,9 +134,10 @@ RSpec.describe 'Flights API', type: :request do
     end
 
     it 'decrements flights count by one' do
+      flight
       expect do
         delete "/api/flights/#{flight.id}"
-      end.to change(Flight, :count).by(0)
+      end.to change(Flight, :count).by(-1)
     end
   end
 end
