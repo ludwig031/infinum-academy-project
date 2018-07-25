@@ -97,14 +97,14 @@ RSpec.describe 'Users API', type: :request do
     context 'when params are valid' do
       it 'returns 200 OK' do
         put "/api/users/#{user.id}",
-            params: { user: { password: 'Lozinka' } }
+            params: { user: { first_name: 'Ime' } }
 
         expect(response).to have_http_status(:success)
       end
 
       it 'returns a updated user' do
         put "/api/users/#{user.id}",
-            params: { user: { first_name: 'Ime', password: 'Lozinka' } }
+            params: { user: { first_name: 'Ime' } }
 
         expect(json_body).to include('user' => include('first_name' => 'Ime'))
       end
