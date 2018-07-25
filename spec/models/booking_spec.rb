@@ -1,13 +1,9 @@
 RSpec.describe Booking, type: :model do
   subject(:booking) { FactoryBot.build(:booking) }
 
-  it 'is invalid without number as seat price' do
-    is_expected.to validate_numericality_of(:seat_price)
-  end
+  it { is_expected.to validate_numericality_of(:seat_price) }
 
-  it 'is invalid without number as number of seats' do
-    is_expected.to validate_numericality_of(:no_of_seats)
-  end
+  it { is_expected.to validate_numericality_of(:no_of_seats) }
 
   it 'is invalid if flight is in past' do
     flight = FactoryBot.create(:flight,
