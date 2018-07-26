@@ -1,5 +1,8 @@
 module Api
   class CompaniesController < ApplicationController
+    before_action :verify_authenticity_token
+    before_action :set_company, only: [:index, :show, :update, :destroy]
+
     def index
       render json: Company.all
     end
@@ -35,6 +38,20 @@ module Api
     end
 
     private
+
+    def set_company
+      @flight = Company.find(params[:id])
+    end
+
+    def verify_authenticity_token
+      token = request.headers['Authorization']
+      @auth_user = User.find_by(token: token)
+      if token && @auth_user
+
+      else
+        render json: { errors: { token: ['is invalid'] } }, status: 401
+      end
+    end
 
     def company_params
       params.require(:company).permit(:name)
