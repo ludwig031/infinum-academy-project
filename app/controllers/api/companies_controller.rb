@@ -43,15 +43,15 @@ module Api
       @flight = Company.find(params[:id])
     end
 
-    # def verify_authenticity_token
-    #   token = request.headers['Authorization']
-    #   @auth_user = User.find_by(token: token)
-    #   if token && @auth_user
-    #
-    #   else
-    #     render json: { errors: { token: ['is invalid'] } }, status: 401
-    #   end
-    # end
+    def verify_authenticity_token
+      token = request.headers['Authorization']
+      @auth_user = User.find_by(token: token)
+      if token && @auth_user
+
+      else
+        render json: { errors: { token: ['is invalid'] } }, status: 401
+      end
+    end
 
     def company_params
       params.require(:company).permit(:name)
