@@ -8,13 +8,7 @@ module Api
     end
 
     def show
-      booking = Booking.where(id: params[:id]).first
-      if booking.user_id == @auth_user.id
-        render json: booking
-      else
-        render json: { errors: { resource: ['is forbidden'] } },
-               status: :forbidden
-      end
+      render json: @booking
     end
 
     def create
@@ -43,7 +37,17 @@ module Api
     private
 
     def set_booking
-      @booking = Booking.where(id: params[:id], user_id: @auth_user.id).first
+      @booking = if @auth_user
+                   booking = Booking.where(id: params[:id],
+                                           user_id: @auth_user.id).first
+                   if booking.user_id = @auth_user.id
+                     Booking.where(id: params[:id]).first
+                   else
+                     render json: { errors: { resource: ['is forbidden'] } },
+                            status: :forbidden
+                   end
+                   Booking.where(id: params[:id], user_id: @auth_user.id).first
+                 end
       raise ActiveRecord::RecordNotFound if @booking.nil?
     end
 
