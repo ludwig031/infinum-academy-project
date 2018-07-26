@@ -1,7 +1,7 @@
 module Api
   class UsersController < ApplicationController
     before_action :verify_authenticity_token
-    before_action :set_user, only: [:show, :update, :destroy]
+    before_action :authorized, only: [:show, :update, :destroy]
 
     def index
       render json: User.all
@@ -39,8 +39,12 @@ module Api
 
     private
 
-    def set_user
-      @user = User.find(params[:id])
+    def authorized
+      if @auth_user.id == params[:id]
+      else
+        render json: { errors: { resource: ['forbidden'] } },
+               status: :forbidden
+      end
     end
 
     def verify_authenticity_token
