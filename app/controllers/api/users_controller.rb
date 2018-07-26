@@ -1,6 +1,7 @@
 module Api
   class UsersController < ApplicationController
-    before_action :verify_authenticity_token
+    before_action :verify_authenticity_token,
+                  only: [:index, :show, :update, :destroy]
     before_action :authorized, only: [:show, :update, :destroy]
 
     def index
@@ -49,10 +50,12 @@ module Api
 
     def verify_authenticity_token
       token = request.headers['Authorization']
-      @auth_user = User.find_by(token: token)
-      if token && @auth_user
+      user = User.find_by(token: token)
+
+      if token && user
       else
-        render json: { errors: { token: ['is invalid'] } }, status: 401
+        render json: { errors: { token: ['is invalid'] } },
+               status: :unauthorized
       end
     end
 
