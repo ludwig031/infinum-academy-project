@@ -8,7 +8,8 @@ module Api
     end
 
     def show
-      render json: @booking
+      booking = Booking.find(params[:id])
+      render json: booking
     end
 
     def create
@@ -23,32 +24,35 @@ module Api
     end
 
     def destroy
-      @booking.destroy
+      booking = Booking.find(params[:id])
+      booking.destroy
     end
 
     def update
-      if @booking.update(booking_params)
-        render json: @booking
+      booking = Booking.find(params[:id])
+
+      if booking.update(booking_params)
+        render json: booking
       else
-        render json: { errors: @booking.errors }, status: :bad_request
+        render json: { errors: booking.errors }, status: :bad_request
       end
     end
 
     private
 
-    def set_booking
-      if @auth_user
-        booking = Booking.where(id: params[:id]).first
-        if booking.user_id == @auth_user.id
-          @booking = booking
-        else
-          render json: { errors: { resource: ['is forbidden'] } },
-                 status: :forbidden
-        end
-      else
-        render json: { errors: { token: ['is invalid'] } }, status: 401
-      end
-    end
+    # def set_booking
+    #   if @auth_user
+    #     booking = Booking.where(id: params[:id]).first
+    #     if booking.user_id == @auth_user.id
+    #       @booking = booking
+    #     else
+    #       render json: { errors: { resource: ['is forbidden'] } },
+    #              status: :forbidden
+    #     end
+    #   else
+    #     render json: { errors: { token: ['is invalid'] } }, status: 401
+    #   end
+    # end
 
     def authorized
       if @auth_user.id == params[:id]
