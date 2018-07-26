@@ -1,16 +1,19 @@
 module Api
   class BookingsController < ApplicationController
+    before_action :verify_authenticity_token
+    before_action :set_booking, only: [:show, :update, :destroy]
+
     def index
-      render json: Booking.all
+      render json: Booking.where(user_id: @auth_user.id)
     end
 
     def show
-      booking = Booking.find(params[:id])
-      render json: booking
+      render json: @booking
     end
 
     def create
       booking = Booking.new(booking_params)
+      booking.user_id = @auth_user.id
 
       if booking.save
         render json: booking, status: :created
@@ -20,21 +23,33 @@ module Api
     end
 
     def destroy
-      booking = Booking.find(params[:id])
-      booking.destroy
+      @booking.destroy
     end
 
     def update
-      booking = Booking.find(params[:id])
-
-      if booking.update(booking_params)
-        render json: booking
+      if @booking.update(booking_params)
+        render json: @booking
       else
-        render json: { errors: booking.errors }, status: :bad_request
+        render json: { errors: @booking.errors }, status: :bad_request
       end
     end
 
     private
+
+    def set_booking
+      @booking = Booking.where(id: params[:id], user_id: @auth_user.id).first
+      raise ActiveRecord::RecordNotFound unless @booking
+    end
+
+    def verify_authenticity_token
+      token = request.headers['Authorization']
+      @auth_user = User.find_by(token: token)
+      if token && @auth_user
+
+      else
+        render json: { errors: { token: ['is invalid'] } }, status: 401
+      end
+    end
 
     def booking_params
       params.require(:booking).permit(:no_of_seats,
