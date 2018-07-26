@@ -55,7 +55,8 @@ module Api
       if token && @auth_user
 
       else
-        render json: { errors: { token: ['is invalid'] } }, status: 401
+        render json: { errors: { token: ['is invalid'] } },
+               status: :unauthorized
       end
     end
 
