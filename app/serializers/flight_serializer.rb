@@ -5,5 +5,5 @@ class FlightSerializer < ActiveModel::Serializer
   attribute :base_price
   attribute :flys_at
   attribute :lands_at
-  belongs_to :company
+  attribute :company_id
 end
