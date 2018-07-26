@@ -1,7 +1,6 @@
 module Api
   class BookingsController < ApplicationController
-    before_action :verify_authenticity_token,
-                  only: [:index, :show, :update, :destroy]
+    before_action :verify_authenticity_token
     before_action :authorized, only: [:show, :update, :destroy]
 
     def index
