@@ -5,6 +5,7 @@ Rails.application.routes.draw do
     resources :flights, except: [:new, :edit]
     resources :bookings, except: [:new, :edit]
     post 'session', action: :create, controller: :session
+    delete 'session', action: :destroy, controller: :session
   end
 
   ActiveAdmin.routes(self)
