@@ -44,7 +44,7 @@ module Api
       booking = Booking.find(params[:id])
       if @auth_user.id == booking.user_id
       else
-        render json: { errors: { resource: ['forbidden'] } },
+        render json: { errors: { resource: ['is forbidden'] } },
                status: :forbidden
       end
     end
