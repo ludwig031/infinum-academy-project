@@ -1,7 +1,7 @@
 module Api
   class FlightsController < ApplicationController
     before_action :verify_authenticity_token
-    before_action :set_flight, only: [:index, :show, :update, :destroy]
+    before_action :set_flight, only: [:show, :update, :destroy]
 
     def index
       render json: Flight.all

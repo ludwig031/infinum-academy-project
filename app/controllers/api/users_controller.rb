@@ -1,7 +1,7 @@
 module Api
   class UsersController < ApplicationController
     before_action :verify_authenticity_token
-    before_action :set_user, only: [:index, :show, :update, :destroy]
+    before_action :set_user, only: [:show, :update, :destroy]
 
     def index
       render json: User.all

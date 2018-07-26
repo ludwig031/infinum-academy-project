@@ -1,7 +1,7 @@
 module Api
   class CompaniesController < ApplicationController
     before_action :verify_authenticity_token
-    before_action :set_company, only: [:index, :show, :update, :destroy]
+    before_action :set_company, only: [:show, :update, :destroy]
 
     def index
       render json: Company.all
