@@ -49,7 +49,7 @@ module Api
 
     def verify_authenticity_token
       token = request.headers['Authorization']
-      user = User.find_by(token: token)
+      @auth_user = User.find_by(token: token)
 
       if token && user
       else
