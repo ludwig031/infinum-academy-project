@@ -51,7 +51,7 @@ module Api
     end
 
     def authorized
-      if user.id == params[:id]
+      if @auth_user.id == params[:id]
       else
         render json: { errors: { resource: ['forbidden'] } },
                status: :forbidden
