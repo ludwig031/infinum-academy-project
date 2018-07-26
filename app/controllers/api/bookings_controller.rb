@@ -40,7 +40,7 @@ module Api
       @booking = if @auth_user
                    booking = Booking.where(id: params[:id],
                                            user_id: @auth_user.id).first
-                   if booking.user_id = @auth_user.id
+                   if booking.user_id == @auth_user.id
                      Booking.where(id: params[:id]).first
                    else
                      render json: { errors: { resource: ['is forbidden'] } },
