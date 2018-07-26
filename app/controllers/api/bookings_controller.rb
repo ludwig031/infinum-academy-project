@@ -40,22 +40,9 @@ module Api
 
     private
 
-    # def set_booking
-    #   if @auth_user
-    #     booking = Booking.where(id: params[:id]).first
-    #     if booking.user_id == @auth_user.id
-    #       @booking = booking
-    #     else
-    #       render json: { errors: { resource: ['is forbidden'] } },
-    #              status: :forbidden
-    #     end
-    #   else
-    #     render json: { errors: { token: ['is invalid'] } }, status: 401
-    #   end
-    # end
-
     def authorized
-      if @auth_user.id == params[:id]
+      booking = Booking.find(params[:id])
+      if @auth_user.id == booking.user_id
       else
         render json: { errors: { resource: ['forbidden'] } },
                status: :forbidden
