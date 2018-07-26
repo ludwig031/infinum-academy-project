@@ -18,7 +18,7 @@ module Api
 
     def destroy
       @auth_user.regenerate_token
-      render json: nil, status: 200
+      render json: nil, status: :no_content
     end
 
     private
