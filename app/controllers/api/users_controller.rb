@@ -51,7 +51,7 @@ module Api
       token = request.headers['Authorization']
       @auth_user = User.find_by(token: token)
 
-      if token && user
+      if token && @auth_user
       else
         render json: { errors: { token: ['is invalid'] } },
                status: :unauthorized
