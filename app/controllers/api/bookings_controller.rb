@@ -41,15 +41,15 @@ module Api
       raise ActiveRecord::RecordNotFound unless @booking
     end
 
-    def verify_authenticity_token
-      token = request.headers['Authorization']
-      @auth_user = User.find_by(token: token)
-      if token && @auth_user
-
-      else
-        render json: { errors: { token: ['is invalid'] } }, status: 401
-      end
-    end
+    # def verify_authenticity_token
+    #   token = request.headers['Authorization']
+    #   @auth_user = User.find_by(token: token)
+    #   if token && @auth_user
+    #
+    #   else
+    #     render json: { errors: { token: ['is invalid'] } }, status: 401
+    #   end
+    # end
 
     def booking_params
       params.require(:booking).permit(:no_of_seats,
