@@ -42,7 +42,7 @@ module Api
     def authorized
       if @auth_user.id == params[:id]
       else
-        render json: { errors: { resource: ['forbidden'] } },
+        render json: { errors: { resource: ['is forbidden'] } },
                status: :forbidden
       end
     end
@@ -51,7 +51,6 @@ module Api
       token = request.headers['Authorization']
       @auth_user = User.find_by(token: token)
       if token && @auth_user
-
       else
         render json: { errors: { token: ['is invalid'] } }, status: 401
       end

@@ -7,7 +7,6 @@ module Api
                  .try(:authenticate, params[:session][:password])
 
       if user
-        # render json: user, status: :created
         render json: Session.new(user: user, token: user.token),
                adapter: :json,
                status: :created
