@@ -40,7 +40,7 @@ module Api
     private
 
     def authorized
-      if @auth_user.id == params[:id]
+      if user.id == params[:id]
       else
         render json: { errors: { resource: ['is forbidden'] } },
                status: :forbidden
@@ -49,9 +49,9 @@ module Api
 
     def verify_authenticity_token
       token = request.headers['Authorization']
-      @auth_user = User.find_by(token: token)
+      user = User.find_by(token: token)
 
-      if token && @auth_user
+      if token && user
       else
         render json: { errors: { token: ['is invalid'] } },
                status: :unauthorized
@@ -59,7 +59,10 @@ module Api
     end
 
     def user_params
-      params.require(:user).permit(:first_name, :last_name, :email, :password)
+      params.require(:user).permit(:first_name,
+                                   :last_name,
+                                   :email,
+                                   :password)
     end
   end
 end
