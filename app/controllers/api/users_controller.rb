@@ -40,7 +40,8 @@ module Api
     private
 
     def authorization
-      return if User.find_by(token: request.headers['Authorization'])
+      user = User.find_by(token: request.headers['Authorization'])
+      return if @auth_user.id == user.id
       render json: { errors: { resource: ['is forbidden'] } },
              status: :forbidden
     end
