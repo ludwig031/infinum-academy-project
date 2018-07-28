@@ -43,8 +43,8 @@ ActiveRecord::Schema.define(version: 2018_07_25_193734) do
     t.string "first_name"
     t.string "last_name"
     t.string "email", null: false
-    t.string "password_digest", default: "defaultPassword"
-    t.string "token"
+    t.string "password_digest", default: "defaultPassword", null: false
+    t.string "token", null: false
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["token"], name: "index_users_on_token", unique: true
   end
