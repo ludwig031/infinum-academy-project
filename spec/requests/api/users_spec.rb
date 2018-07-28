@@ -32,61 +32,73 @@ RSpec.describe 'Users API', type: :request do
   end
 
   describe 'POST #create' do
+    let(:user) { FactoryBot.create(:user) }
+
+    before { user }
+
     context 'when params are valid' do
       it 'returns 201' do
-        post '/api/users',
-             params: { user: { first_name: 'Ljudevit',
-                               last_name: 'Ludwig',
-                               email: 'mail-1@mail.com',
-                               password: 'password' } }
+        user = FactoryBot.create(:user)
+        post '/api/session', params:
+            { session: { email: user.email,
+                         password: 'defaultPassword' } }
 
         expect(response).to have_http_status(:created)
       end
 
-      it 'changes users count by one' do
-        expect do
-          post '/api/users',
-               params: { user: { first_name: 'Ljudevit',
-                                 last_name: 'Ludwig',
-                                 email: 'mail-2@mail.com',
-                                 password: 'password' } }
-        end.to change(User, :count).by(+1)
+      it 'responds with token information' do
+        user = FactoryBot.create(:user)
+        post '/api/session', params:
+            { session: { email: user.email,
+                         password: 'defaultPassword' } }
+
+        expect(json_body).to include('session' =>
+                                         include('token' => user.token))
       end
 
-      it 'creates and returns a new user' do
-        post '/api/users',
-             params: { user: { first_name: 'Ljudevit',
-                               last_name: 'Ludwig',
-                               email: 'mail-3@mail.com',
-                               password: 'password' } }
+      it 'responds with user information' do
+        user = FactoryBot.create(:user)
+        post '/api/session', params:
+            { session: { email: user.email,
+                         password: 'defaultPassword' } }
 
-        expect(json_body).to include('user' => include('last_name' => 'Ludwig'))
+        expect(json_body).to include('session' =>
+                                         include('user' =>
+                                                     include('id' => user.id)))
       end
 
-      it 'can authenticate' do
-        post '/api/users',
-             params: { user: { first_name: 'Ljudevit',
-                               last_name: 'Ludwig',
-                               email: 'mail-3@mail.com',
-                               password: 'password' } }
+      it 'can authenticate with provided password' do
+        user = FactoryBot.create(:user)
+        post '/api/session', params:
+            { session: { email: user.email,
+                         password: 'defaultPassword' } }
 
-        user = User.find_by(id: json_body['user']['id'])
-        auth_user = user.try(:authenticate, 'password')
-        expect(user).to eq(auth_user)
+        id = json_body['session']['user']['id']
+        auth_user = User.find_by(id: json_body['session']['user']['id'])
+                        .try(:authenticate, 'defaultPassword')
+
+        expect(id).to eq(auth_user.id)
       end
     end
 
     context 'when params are invalid' do
       it 'returns 400 Bad Request' do
-        post '/api/users', params: { user: { first_name: '' } }
+        user = FactoryBot.create(:user)
+        post '/api/session', params:
+            { session: { email: user.email,
+                         password: 'wrongPassword' } }
 
         expect(response).to have_http_status(:bad_request)
       end
 
       it 'returns all errors' do
-        post '/api/users', params: { user: { first_name: '' } }
+        user = FactoryBot.create(:user)
+        post '/api/session', params:
+            { session: { email: user.email,
+                         password: 'wrongPassword' } }
 
-        expect(json_body).to include('errors')
+        expect(json_body).to include('errors' =>
+                               include('credentials' => ['are invalid']))
       end
     end
   end
@@ -94,7 +106,7 @@ RSpec.describe 'Users API', type: :request do
   describe 'PATCH #update' do
     let(:user) { FactoryBot.create(:user) }
 
-    context 'when params are valid' do
+    context 'when params are valid password is changed' do
       it 'returns 200 OK' do
         put "/api/users/#{user.id}",
             params: { user: { first_name: 'Ime' } }
