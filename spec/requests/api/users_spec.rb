@@ -33,34 +33,38 @@ RSpec.describe 'Users API', type: :request do
 
   describe 'POST #create' do
     let(:user) { FactoryBot.create(:user) }
+    let(:user_params) do
+      { 'email' => user.email, 'password' => user.password }
+    end
+
+    let(:wrong_params) do
+      { 'email' => 'mail@email.com', 'password' => 'wrongPass' }
+    end
 
     before { user }
 
     context 'when params are valid' do
       it 'returns 201' do
-        user = FactoryBot.create(:user)
+        # user = FactoryBot.create(:user)
         post '/api/session', params:
-            { session: { email: user.email,
-                         password: 'defaultPassword' } }
+            { 'session' => user_params }
 
         expect(response).to have_http_status(:created)
       end
 
       it 'responds with token information' do
-        user = FactoryBot.create(:user)
+        # user = FactoryBot.create(:user)
         post '/api/session', params:
-            { session: { email: user.email,
-                         password: 'defaultPassword' } }
+            { 'session' => user_params }
 
         expect(json_body).to include('session' =>
                                          include('token' => user.token))
       end
 
       it 'responds with user information' do
-        user = FactoryBot.create(:user)
+        # user = FactoryBot.create(:user)
         post '/api/session', params:
-            { session: { email: user.email,
-                         password: 'defaultPassword' } }
+            { 'session' => user_params }
 
         expect(json_body).to include('session' =>
                                          include('user' =>
@@ -68,10 +72,9 @@ RSpec.describe 'Users API', type: :request do
       end
 
       it 'can authenticate with provided password' do
-        user = FactoryBot.create(:user)
+        # user = FactoryBot.create(:user)
         post '/api/session', params:
-            { session: { email: user.email,
-                         password: 'defaultPassword' } }
+            { 'session' => user_params }
 
         id = json_body['session']['user']['id']
         auth_user = User.find_by(id: json_body['session']['user']['id'])
@@ -83,19 +86,17 @@ RSpec.describe 'Users API', type: :request do
 
     context 'when params are invalid' do
       it 'returns 400 Bad Request' do
-        user = FactoryBot.create(:user)
+        # user = FactoryBot.create(:user)
         post '/api/session', params:
-            { session: { email: user.email,
-                         password: 'wrongPassword' } }
+            { 'session' => wrong_params }
 
         expect(response).to have_http_status(:bad_request)
       end
 
       it 'returns all errors' do
-        user = FactoryBot.create(:user)
+        # user = FactoryBot.create(:user)
         post '/api/session', params:
-            { session: { email: user.email,
-                         password: 'wrongPassword' } }
+            { 'session' => wrong_params }
 
         expect(json_body).to include('errors' =>
                                include('credentials' => ['are invalid']))
