@@ -1,6 +1,6 @@
 module Api
   class UsersController < ApplicationController
-    before_action :authentication
+    before_action :authentication, only: [:index, :show, :update, :destroy]
     before_action :authorization, only: [:show, :update, :destroy]
 
     def index
