@@ -45,7 +45,6 @@ RSpec.describe 'Users API', type: :request do
 
     context 'when params are valid' do
       it 'returns 201' do
-        # user = FactoryBot.create(:user)
         post '/api/session', params:
             { 'session' => user_params }
 
@@ -53,7 +52,6 @@ RSpec.describe 'Users API', type: :request do
       end
 
       it 'responds with token information' do
-        # user = FactoryBot.create(:user)
         post '/api/session', params:
             { 'session' => user_params }
 
@@ -62,7 +60,6 @@ RSpec.describe 'Users API', type: :request do
       end
 
       it 'responds with user information' do
-        # user = FactoryBot.create(:user)
         post '/api/session', params:
             { 'session' => user_params }
 
@@ -72,7 +69,6 @@ RSpec.describe 'Users API', type: :request do
       end
 
       it 'can authenticate with provided password' do
-        # user = FactoryBot.create(:user)
         post '/api/session', params:
             { 'session' => user_params }
 
@@ -86,7 +82,6 @@ RSpec.describe 'Users API', type: :request do
 
     context 'when params are invalid' do
       it 'returns 400 Bad Request' do
-        # user = FactoryBot.create(:user)
         post '/api/session', params:
             { 'session' => wrong_params }
 
@@ -94,7 +89,6 @@ RSpec.describe 'Users API', type: :request do
       end
 
       it 'returns all errors' do
-        # user = FactoryBot.create(:user)
         post '/api/session', params:
             { 'session' => wrong_params }
 
