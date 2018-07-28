@@ -1,7 +1,7 @@
 module Api
   class BookingsController < ApplicationController
-    before_action :verify_authenticity_token
-    before_action :authorized, only: [:show, :update, :destroy]
+    before_action :authentication
+    before_action :authorization, only: [:show, :update, :destroy]
 
     def index
       render json: Booking.where(user_id: @auth_user.id)
@@ -40,23 +40,12 @@ module Api
 
     private
 
-    def authorized
+    def authorization
       booking = Booking.find(params[:id])
       if @auth_user.id == booking.user_id
       else
         render json: { errors: { resource: ['is forbidden'] } },
                status: :forbidden
-      end
-    end
-
-    def verify_authenticity_token
-      token = request.headers['Authorization']
-      @auth_user = User.find_by(token: token)
-      if token && @auth_user
-
-      else
-        render json: { errors: { token: ['is invalid'] } },
-               status: :unauthorized
       end
     end
 
