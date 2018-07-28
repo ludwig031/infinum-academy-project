@@ -40,6 +40,7 @@ module Api
     private
 
     def authorization
+      token = request.headers['Authorization']
       user = User.find_by(token: token)
 
       if user.id == params[:id]
