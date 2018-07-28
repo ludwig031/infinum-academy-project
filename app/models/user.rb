@@ -17,7 +17,4 @@ class User < ApplicationRecord
   validates :password,
             presence: true,
             on: :create
-  validates :token,
-            presence: true,
-            uniqueness: true
 end
