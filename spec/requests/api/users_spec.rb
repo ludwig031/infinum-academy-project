@@ -15,6 +15,19 @@ RSpec.describe 'Users API', type: :request do
       get '/api/users', headers: { Authorization: users[0].token }
       expect(json_body['users'].length).to eq 3
     end
+
+    context 'when unauthenticated' do
+      it 'fails' do
+        get '/api/users', headers: { Authorization: '' }
+        expect(response).to have_http_status(:unauthorized)
+      end
+
+      it 'responds with errors' do
+        get '/api/users', headers: { Authorization: '' }
+        expect(json_body)
+          .to include('errors' => include('token' => ['is invalid']))
+      end
+    end
   end
 
   describe 'GET #show' do
@@ -30,6 +43,19 @@ RSpec.describe 'Users API', type: :request do
       get "/api/users/#{user.id}", headers: { Authorization: user.token }
 
       expect(json_body).to include('user')
+    end
+
+    context 'when unauthenticated' do
+      it 'fails' do
+        get "/api/users/#{user.id}", headers: { Authorization: '' }
+        expect(response).to have_http_status(:unauthorized)
+      end
+
+      it 'responds with errors' do
+        get "/api/users/#{user.id}", headers: { Authorization: '' }
+        expect(json_body)
+          .to include('errors' => include('token' => ['is invalid']))
+      end
     end
   end
 
@@ -113,9 +139,23 @@ RSpec.describe 'Users API', type: :request do
 
       it 'returns all errors' do
         put "/api/users/#{user.id}",
-            params: { user: { password: nil } }
+            params: { user: { password: nil } },
+            headers: { Authorization: user.token }
 
         expect(json_body).to include('errors')
+      end
+    end
+
+    context 'when unauthenticated' do
+      it 'fails' do
+        put "/api/users/#{user.id}", headers: { Authorization: '' }
+        expect(response).to have_http_status(:unauthorized)
+      end
+
+      it 'responds with errors' do
+        put "/api/users/#{user.id}", headers: { Authorization: '' }
+        expect(json_body)
+          .to include('errors' => include('token' => ['is invalid']))
       end
     end
   end
@@ -134,6 +174,19 @@ RSpec.describe 'Users API', type: :request do
       expect do
         delete "/api/users/#{user.id}", headers: { Authorization: user.token }
       end.to change(User, :count).by(-1)
+    end
+
+    context 'when unauthenticated' do
+      it 'fails' do
+        delete "/api/users/#{user.id}", headers: { Authorization: '' }
+        expect(response).to have_http_status(:unauthorized)
+      end
+
+      it 'responds with errors' do
+        delete "/api/users/#{user.id}", headers: { Authorization: '' }
+        expect(json_body)
+          .to include('errors' => include('token' => ['is invalid']))
+      end
     end
   end
 end
