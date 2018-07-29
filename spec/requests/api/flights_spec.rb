@@ -17,6 +17,19 @@ RSpec.describe 'Flights API', type: :request do
       get '/api/flights', headers: { Authorization: user.token }
       expect(json_body['flights'].length).to eq 3
     end
+
+    context 'when unauthenticated' do
+      it 'fails' do
+        get '/api/flights', headers: { Authorization: '' }
+        expect(response).to have_http_status(:unauthorized)
+      end
+
+      it 'responds with errors' do
+        get '/api/flights', headers: { Authorization: '' }
+        expect(json_body)
+          .to include('errors' => include('token' => ['is invalid']))
+      end
+    end
   end
 
   describe 'GET #show' do
@@ -30,6 +43,19 @@ RSpec.describe 'Flights API', type: :request do
     it 'returns a single flight' do
       get "/api/flights/#{flight.id}", headers: { Authorization: user.token }
       expect(json_body).to include('flight')
+    end
+
+    context 'when unauthenticated' do
+      it 'fails' do
+        get "/api/flights/#{flight.id}", headers: { Authorization: '' }
+        expect(response).to have_http_status(:unauthorized)
+      end
+
+      it 'responds with errors' do
+        get "/api/flights/#{flight.id}", headers: { Authorization: '' }
+        expect(json_body)
+          .to include('errors' => include('token' => ['is invalid']))
+      end
     end
   end
 
@@ -95,6 +121,19 @@ RSpec.describe 'Flights API', type: :request do
         expect(json_body).to include('errors')
       end
     end
+
+    context 'when unauthenticated' do
+      it 'fails' do
+        post '/api/flights', headers: { Authorization: '' }
+        expect(response).to have_http_status(:unauthorized)
+      end
+
+      it 'responds with errors' do
+        post '/api/flights', headers: { Authorization: '' }
+        expect(json_body)
+          .to include('errors' => include('token' => ['is invalid']))
+      end
+    end
   end
 
   describe 'PATCH #update' do
@@ -135,6 +174,19 @@ RSpec.describe 'Flights API', type: :request do
         expect(json_body).to include('errors')
       end
     end
+
+    context 'when unauthenticated' do
+      it 'fails' do
+        put "/api/flights/#{flight.id}", headers: { Authorization: '' }
+        expect(response).to have_http_status(:unauthorized)
+      end
+
+      it 'responds with errors' do
+        put "/api/flights/#{flight.id}", headers: { Authorization: '' }
+        expect(json_body)
+          .to include('errors' => include('token' => ['is invalid']))
+      end
+    end
   end
 
   describe 'DELETE #destroy' do
@@ -153,6 +205,19 @@ RSpec.describe 'Flights API', type: :request do
         delete "/api/flights/#{flight.id}",
                headers: { Authorization: user.token }
       end.to change(Flight, :count).by(-1)
+    end
+
+    context 'when unauthenticated' do
+      it 'fails' do
+        delete "/api/flights/#{flight.id}", headers: { Authorization: '' }
+        expect(response).to have_http_status(:unauthorized)
+      end
+
+      it 'responds with errors' do
+        delete "/api/flights/#{flight.id}", headers: { Authorization: '' }
+        expect(json_body)
+          .to include('errors' => include('token' => ['is invalid']))
+      end
     end
   end
 end
