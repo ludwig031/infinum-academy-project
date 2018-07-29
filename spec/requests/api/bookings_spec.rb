@@ -41,10 +41,11 @@ RSpec.describe 'Bookings API', type: :request do
       let(:user) { FactoryBot.create(:user) }
 
       it 'returns 201' do
-        post '/api/bookings', params: { booking: { no_of_seats: 1,
-                                                   seat_price: 2,
-                                                   flight_id: flight.id,
-                                                   user_id: user.id } },
+        post '/api/bookings',
+             params: { booking: { no_of_seats: 1,
+                                  seat_price: 2,
+                                  flight_id: flight.id,
+                                  user_id: user.id } },
              headers: { Authorization: user.token }
 
         expect(response).to have_http_status(:created)
@@ -75,14 +76,16 @@ RSpec.describe 'Bookings API', type: :request do
 
     context 'when params are invalid' do
       it 'returns 400 Bad Request' do
-        post '/api/bookings', params: { booking: { seat_price: '' } },
+        post '/api/bookings',
+             params: { booking: { seat_price: '' } },
              headers: { Authorization: user.token }
 
         expect(response).to have_http_status(:bad_request)
       end
 
       it 'returns all errors' do
-        post '/api/bookings', params: { booking: { seat_price: '' } },
+        post '/api/bookings',
+             params: { booking: { seat_price: '' } },
              headers: { Authorization: user.token }
 
         expect(json_body).to include('errors')
