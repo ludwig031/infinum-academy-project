@@ -17,6 +17,19 @@ RSpec.describe 'Companies API', type: :request do
       get '/api/companies', headers: { Authorization: user.token }
       expect(json_body['companies'].length).to eq 3
     end
+
+    context 'when unauthenticated' do
+      it 'fails' do
+        get '/api/companies', headers: { Authorization: '' }
+        expect(response).to have_http_status(:unauthorized)
+      end
+
+      it 'responds with errors' do
+        get '/api/companies', headers: { Authorization: '' }
+        expect(json_body)
+          .to include('errors' => include('token' => ['is invalid']))
+      end
+    end
   end
 
   describe 'GET #show' do
@@ -30,6 +43,19 @@ RSpec.describe 'Companies API', type: :request do
     it 'returns a single company' do
       get "/api/companies/#{company.id}", headers: { Authorization: user.token }
       expect(json_body).to include('company')
+    end
+
+    context 'when unauthenticated' do
+      it 'fails' do
+        get "/api/companies/#{company.id}", headers: { Authorization: '' }
+        expect(response).to have_http_status(:unauthorized)
+      end
+
+      it 'responds with errors' do
+        get "/api/companies/#{company.id}", headers: { Authorization: '' }
+        expect(json_body)
+          .to include('errors' => include('token' => ['is invalid']))
+      end
     end
   end
 
@@ -77,6 +103,19 @@ RSpec.describe 'Companies API', type: :request do
         expect(json_body).to include('errors')
       end
     end
+
+    context 'when unauthenticated' do
+      it 'fails' do
+        post '/api/companies', headers: { Authorization: '' }
+        expect(response).to have_http_status(:unauthorized)
+      end
+
+      it 'responds with errors' do
+        post '/api/companies', headers: { Authorization: '' }
+        expect(json_body)
+          .to include('errors' => include('token' => ['is invalid']))
+      end
+    end
   end
 
   describe 'PATCH #update' do
@@ -117,6 +156,19 @@ RSpec.describe 'Companies API', type: :request do
         expect(json_body).to include('errors')
       end
     end
+
+    context 'when unauthenticated' do
+      it 'fails' do
+        put "/api/companies/#{company.id}", headers: { Authorization: '' }
+        expect(response).to have_http_status(:unauthorized)
+      end
+
+      it 'responds with errors' do
+        put "/api/companies/#{company.id}", headers: { Authorization: '' }
+        expect(json_body)
+          .to include('errors' => include('token' => ['is invalid']))
+      end
+    end
   end
 
   describe 'DELETE #destroy' do
@@ -135,6 +187,19 @@ RSpec.describe 'Companies API', type: :request do
         delete "/api/companies/#{company.id}",
                headers: { Authorization: user.token }
       end.to change(Company, :count).by(-1)
+    end
+
+    context 'when unauthenticated' do
+      it 'fails' do
+        delete "/api/companies/#{company.id}", headers: { Authorization: '' }
+        expect(response).to have_http_status(:unauthorized)
+      end
+
+      it 'responds with errors' do
+        delete "/api/companies/#{company.id}", headers: { Authorization: '' }
+        expect(json_body)
+          .to include('errors' => include('token' => ['is invalid']))
+      end
     end
   end
 end
