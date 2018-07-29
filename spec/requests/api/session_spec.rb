@@ -66,4 +66,38 @@ RSpec.describe 'Companies API', type: :request do
       end
     end
   end
+
+  describe 'DELETE #destroy' do
+    let(:user) { FactoryBot.create(:user, token: 'los:token') }
+
+    before { user }
+
+    context 'when succeeds' do
+      it 'returns 204 No Content' do
+        delete '/api/session', headers: { Authorization: user.token }
+
+        expect(response).to have_http_status(:no_content)
+      end
+
+      # it 'changes user token' do
+      #   expect { delete '/api/session',
+      # headers: { Authorization: user.token } }
+      #     .to change(user, :token)
+      # end
+    end
+
+    context 'when fails' do
+      it 'returns 401 Unauthorized' do
+        delete '/api/session', headers: { Authorization: '' }
+
+        expect(response).to have_http_status(:unauthorized)
+      end
+
+      it 'returns all errors' do
+        delete '/api/session', headers: { Authorization: '' }
+
+        expect(json_body).to include('errors')
+      end
+    end
+  end
 end
