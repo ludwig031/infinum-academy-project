@@ -19,6 +19,19 @@ RSpec.describe 'Bookings API', type: :request do
       get '/api/bookings', headers: { Authorization: user.token }
       expect(json_body['bookings'].length).to eq 3
     end
+
+    context 'when unauthenticated' do
+      it 'fails' do
+        get '/api/bookings', headers: { Authorization: '' }
+        expect(response).to have_http_status(:unauthorized)
+      end
+
+      it 'responds with errors' do
+        get '/api/bookings', headers: { Authorization: '' }
+        expect(json_body)
+          .to include('errors' => include('token' => ['is invalid']))
+      end
+    end
   end
 
   describe 'GET #show' do
@@ -32,6 +45,19 @@ RSpec.describe 'Bookings API', type: :request do
     it 'returns a single booking' do
       get "/api/bookings/#{booking.id}", headers: { Authorization: user.token }
       expect(json_body).to include('booking')
+    end
+
+    context 'when unauthenticated' do
+      it 'fails' do
+        get "/api/bookings/#{booking.id}", headers: { Authorization: '' }
+        expect(response).to have_http_status(:unauthorized)
+      end
+
+      it 'responds with errors' do
+        get "/api/bookings/#{booking.id}", headers: { Authorization: '' }
+        expect(json_body)
+          .to include('errors' => include('token' => ['is invalid']))
+      end
     end
   end
 
@@ -91,6 +117,19 @@ RSpec.describe 'Bookings API', type: :request do
         expect(json_body).to include('errors')
       end
     end
+
+    context 'when unauthenticated' do
+      it 'fails' do
+        post '/api/bookings', headers: { Authorization: '' }
+        expect(response).to have_http_status(:unauthorized)
+      end
+
+      it 'responds with errors' do
+        post '/api/bookings', headers: { Authorization: '' }
+        expect(json_body)
+          .to include('errors' => include('token' => ['is invalid']))
+      end
+    end
   end
 
   describe 'PATCH #update' do
@@ -131,6 +170,19 @@ RSpec.describe 'Bookings API', type: :request do
         expect(json_body).to include('errors')
       end
     end
+
+    context 'when unauthenticated' do
+      it 'fails' do
+        put "/api/bookings/#{booking.id}", headers: { Authorization: '' }
+        expect(response).to have_http_status(:unauthorized)
+      end
+
+      it 'responds with errors' do
+        put "/api/bookings/#{booking.id}", headers: { Authorization: '' }
+        expect(json_body)
+          .to include('errors' => include('token' => ['is invalid']))
+      end
+    end
   end
 
   describe 'DELETE #destroy' do
@@ -149,6 +201,19 @@ RSpec.describe 'Bookings API', type: :request do
         delete "/api/bookings/#{booking.id}",
                headers: { Authorization: user.token }
       end.to change(Booking, :count).by(-1)
+    end
+
+    context 'when unauthenticated' do
+      it 'fails' do
+        delete "/api/bookings/#{booking.id}", headers: { Authorization: '' }
+        expect(response).to have_http_status(:unauthorized)
+      end
+
+      it 'responds with errors' do
+        delete "/api/bookings/#{booking.id}", headers: { Authorization: '' }
+        expect(json_body)
+          .to include('errors' => include('token' => ['is invalid']))
+      end
     end
   end
 end
