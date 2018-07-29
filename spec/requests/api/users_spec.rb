@@ -34,67 +34,49 @@ RSpec.describe 'Users API', type: :request do
   end
 
   describe 'POST #create' do
-    let(:user) { FactoryBot.create(:user) }
-    let(:user_params) do
-      { 'email' => user.email, 'password' => user.password }
-    end
-    let(:wrong_params) do
-      { 'email' => 'mail@email.com', 'password' => 'wrongPass' }
-    end
-
-    before { user }
-
     context 'when params are valid' do
       it 'returns 201' do
-        post '/api/session', params:
-            { 'session' => user_params }
+        post '/api/users',
+             params: { user: { first_name: 'Ljudevit',
+                               last_name: 'Ludwig',
+                               email: 'mail-1@mail.com',
+                               password: 'Lozinka' } }
 
         expect(response).to have_http_status(:created)
       end
 
-      it 'responds with token information' do
-        post '/api/session', params:
-            { 'session' => user_params }
-
-        expect(json_body).to include('session' =>
-                                         include('token' => user.token))
+      it 'changes users count by one' do
+        expect do
+          post '/api/users',
+               params: { user: { first_name: 'Ljudevit',
+                                 last_name: 'Ludwig',
+                                 email: 'mail-2@mail.com',
+                                 password: 'Lozinka' } }
+        end.to change(User, :count).by(+1)
       end
 
-      it 'responds with user information' do
-        post '/api/session', params:
-            { 'session' => user_params }
+      it 'creates and returns a new user' do
+        post '/api/users',
+             params: { user: { first_name: 'Ljudevit',
+                               last_name: 'Ludwig',
+                               email: 'mail-3@mail.com',
+                               password: 'Lozinka' } }
 
-        expect(json_body).to include('session' =>
-                                         include('user' =>
-                                                     include('id' => user.id)))
-      end
-
-      it 'can authenticate with provided password' do
-        post '/api/session', params:
-            { 'session' => user_params }
-
-        id = json_body['session']['user']['id']
-        auth_user = User.find_by(id: json_body['session']['user']['id'])
-                        .try(:authenticate, 'defaultPassword')
-
-        expect(id).to eq(auth_user.id)
+        expect(json_body).to include('user' => include('last_name' => 'Ludwig'))
       end
     end
 
     context 'when params are invalid' do
       it 'returns 400 Bad Request' do
-        post '/api/session', params:
-            { 'session' => wrong_params }
+        post '/api/users', params: { user: { first_name: '' } }
 
         expect(response).to have_http_status(:bad_request)
       end
 
       it 'returns all errors' do
-        post '/api/session', params:
-            { 'session' => wrong_params }
+        post '/api/users', params: { user: { first_name: '' } }
 
-        expect(json_body).to include('errors' =>
-                               include('credentials' => ['are invalid']))
+        expect(json_body).to include('errors')
       end
     end
   end
