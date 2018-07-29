@@ -59,6 +59,27 @@ RSpec.describe 'Bookings API', type: :request do
           .to include('errors' => include('token' => ['is invalid']))
       end
     end
+
+    context 'when authenticated but unauthorized' do
+      let(:user2) { FactoryBot.create(:user) }
+
+      before { user2 }
+
+      it 'fails' do
+        get "/api/bookings/#{booking.id}",
+            headers: { Authorization: user2.token }
+
+        expect(response).to have_http_status(:forbidden)
+      end
+
+      it 'responds with errors' do
+        get "/api/bookings/#{booking.id}",
+            headers: { Authorization: user2.token }
+
+        expect(json_body)
+          .to include('errors' => include('resource' => ['is forbidden']))
+      end
+    end
   end
 
   describe 'POST #create' do
@@ -183,6 +204,29 @@ RSpec.describe 'Bookings API', type: :request do
           .to include('errors' => include('token' => ['is invalid']))
       end
     end
+
+    context 'when authenticated but unauthorized' do
+      let(:user2) { FactoryBot.create(:user) }
+
+      before { user2 }
+
+      it 'fails' do
+        put "/api/bookings/#{booking.id}",
+            params: { booking: { seat_price: 5 } },
+            headers: { Authorization: user2.token }
+
+        expect(response).to have_http_status(:forbidden)
+      end
+
+      it 'responds with errors' do
+        put "/api/bookings/#{booking.id}",
+            params: { booking: { seat_price: 5 } },
+            headers: { Authorization: user2.token }
+
+        expect(json_body)
+          .to include('errors' => include('resource' => ['is forbidden']))
+      end
+    end
   end
 
   describe 'DELETE #destroy' do
@@ -213,6 +257,27 @@ RSpec.describe 'Bookings API', type: :request do
         delete "/api/bookings/#{booking.id}", headers: { Authorization: '' }
         expect(json_body)
           .to include('errors' => include('token' => ['is invalid']))
+      end
+    end
+
+    context 'when authenticated but unauthorized' do
+      let(:user2) { FactoryBot.create(:user) }
+
+      before { user2 }
+
+      it 'fails' do
+        delete "/api/bookings/#{booking.id}",
+               headers: { Authorization: user2.token }
+
+        expect(response).to have_http_status(:forbidden)
+      end
+
+      it 'responds with errors' do
+        delete "/api/bookings/#{booking.id}",
+               headers: { Authorization: user2.token }
+
+        expect(json_body)
+          .to include('errors' => include('resource' => ['is forbidden']))
       end
     end
   end
