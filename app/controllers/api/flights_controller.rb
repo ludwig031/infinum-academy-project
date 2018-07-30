@@ -1,7 +1,6 @@
 module Api
   class FlightsController < ApplicationController
-    before_action :verify_authenticity_token
-    before_action :set_flight, only: [:show, :update, :destroy]
+    before_action :authentication
 
     def index
       render json: Flight.all
@@ -38,20 +37,6 @@ module Api
     end
 
     private
-
-    def set_flight
-      @flight = Flight.find(params[:id])
-    end
-
-    def verify_authenticity_token
-      token = request.headers['Authorization']
-      @auth_user = User.find_by(token: token)
-      if token && @auth_user
-
-      else
-        render json: { errors: { token: ['is invalid'] } }, status: 401
-      end
-    end
 
     def flight_params
       params.require(:flight).permit(:name,

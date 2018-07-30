@@ -2,15 +2,14 @@
 class ApplicationController < ActionController::Base
   skip_before_action :verify_authenticity_token
 
-  def authentication
-    token = request.headers['Authorization']
-    @auth_user = User.find_by(token: token)
-    if token && @auth_user
+  def current_user
+    @current_user ||= User.find_by(token: request.headers['Authorization'])
+  end
 
-    else
-      render json: { errors: { token: ['is invalid'] } },
-             status: :unauthorized
-    end
+  def authentication
+    return if current_user.present?
+    render json: { errors: { token: ['is invalid'] } },
+           status: :unauthorized
   end
 
   def matches

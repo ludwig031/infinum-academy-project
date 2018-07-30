@@ -41,7 +41,7 @@ module Api
 
     def authorization
       user = User.find(params[:id])
-      return if @auth_user.id == user.id
+      return if @current_user.id == user.id
       render json: { errors: { resource: ['is forbidden'] } },
              status: :forbidden
     end

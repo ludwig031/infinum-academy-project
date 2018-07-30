@@ -4,7 +4,7 @@ module Api
     before_action :authorization, only: [:show, :update, :destroy]
 
     def index
-      render json: Booking.where(user_id: @auth_user.id)
+      render json: @current_user.bookings
     end
 
     def show
@@ -14,7 +14,7 @@ module Api
 
     def create
       booking = Booking.new(booking_params)
-      booking.user_id = @auth_user.id
+      booking.user_id = @current_user.id
 
       if booking.save
         render json: booking, status: :created
@@ -40,9 +40,12 @@ module Api
 
     private
 
+    def booking
+      @booking ||= Booking.find(params[:id])
+    end
+
     def authorization
-      booking = Booking.find(params[:id])
-      if @auth_user.id == booking.user_id
+      if @current_user == booking.user
       else
         render json: { errors: { resource: ['is forbidden'] } },
                status: :forbidden
