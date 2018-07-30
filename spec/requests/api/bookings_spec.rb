@@ -1,12 +1,12 @@
 RSpec.describe 'Bookings API', type: :request do
   include TestHelpers::JsonResponse
 
-  let!(:user) { FactoryBot.create(:user) }
+  let(:user) { FactoryBot.create(:user) }
 
   before { user }
 
   describe 'GET #index' do
-    let(:bookings) { FactoryBot.create_list(:booking, 3, user_id: user.id) }
+    let(:bookings) { FactoryBot.create_list(:booking, 3, user: user) }
 
     before { bookings }
 
@@ -35,7 +35,7 @@ RSpec.describe 'Bookings API', type: :request do
   end
 
   describe 'GET #show' do
-    let(:booking) { FactoryBot.create(:booking, user_id: user.id) }
+    let(:booking) { FactoryBot.create(:booking, user: user) }
 
     it 'returns http success' do
       get "/api/bookings/#{booking.id}", headers: { Authorization: user.token }
@@ -61,20 +61,20 @@ RSpec.describe 'Bookings API', type: :request do
     end
 
     context 'when authenticated but unauthorized' do
-      let(:user2) { FactoryBot.create(:user) }
+      let(:another_user) { FactoryBot.create(:user) }
 
-      before { user2 }
+      before { another_user }
 
       it 'fails' do
         get "/api/bookings/#{booking.id}",
-            headers: { Authorization: user2.token }
+            headers: { Authorization: another_user.token }
 
         expect(response).to have_http_status(:forbidden)
       end
 
       it 'responds with errors' do
         get "/api/bookings/#{booking.id}",
-            headers: { Authorization: user2.token }
+            headers: { Authorization: another_user.token }
 
         expect(json_body)
           .to include('errors' => include('resource' => ['is forbidden']))
@@ -92,7 +92,7 @@ RSpec.describe 'Bookings API', type: :request do
              params: { booking: { no_of_seats: 1,
                                   seat_price: 2,
                                   flight_id: flight.id,
-                                  user_id: user.id } },
+                                  user: user } },
              headers: { Authorization: user.token }
 
         expect(response).to have_http_status(:created)
@@ -104,7 +104,7 @@ RSpec.describe 'Bookings API', type: :request do
                params: { booking: { no_of_seats: 1,
                                     seat_price: 2,
                                     flight_id: flight.id,
-                                    user_id: user.id } },
+                                    user: user } },
                headers: { Authorization: user.token }
         end.to change(Booking, :count).by(+1)
       end
@@ -114,7 +114,7 @@ RSpec.describe 'Bookings API', type: :request do
              params: { booking: { no_of_seats: 1,
                                   seat_price: 2,
                                   flight_id: flight.id,
-                                  user_id: user.id } },
+                                  user: user } },
              headers: { Authorization: user.token }
 
         expect(json_body).to include('booking' => include('seat_price' => 2))
@@ -154,7 +154,7 @@ RSpec.describe 'Bookings API', type: :request do
   end
 
   describe 'PATCH #update' do
-    let(:booking) { FactoryBot.create(:booking, user_id: user.id) }
+    let(:booking) { FactoryBot.create(:booking, user: user) }
 
     context 'when params are valid' do
       it 'returns 200 OK' do
@@ -206,14 +206,14 @@ RSpec.describe 'Bookings API', type: :request do
     end
 
     context 'when authenticated but unauthorized' do
-      let(:user2) { FactoryBot.create(:user) }
+      let(:another_user) { FactoryBot.create(:user) }
 
-      before { user2 }
+      before { another_user }
 
       it 'fails' do
         put "/api/bookings/#{booking.id}",
             params: { booking: { seat_price: 5 } },
-            headers: { Authorization: user2.token }
+            headers: { Authorization: another_user.token }
 
         expect(response).to have_http_status(:forbidden)
       end
@@ -221,7 +221,7 @@ RSpec.describe 'Bookings API', type: :request do
       it 'responds with errors' do
         put "/api/bookings/#{booking.id}",
             params: { booking: { seat_price: 5 } },
-            headers: { Authorization: user2.token }
+            headers: { Authorization: another_user.token }
 
         expect(json_body)
           .to include('errors' => include('resource' => ['is forbidden']))
@@ -230,7 +230,7 @@ RSpec.describe 'Bookings API', type: :request do
   end
 
   describe 'DELETE #destroy' do
-    let(:booking) { FactoryBot.create(:booking, user_id: user.id) }
+    let(:booking) { FactoryBot.create(:booking, user: user) }
 
     it 'returns 204 No Content' do
       delete "/api/bookings/#{booking.id}",
@@ -261,20 +261,20 @@ RSpec.describe 'Bookings API', type: :request do
     end
 
     context 'when authenticated but unauthorized' do
-      let(:user2) { FactoryBot.create(:user) }
+      let(:another_user) { FactoryBot.create(:user) }
 
-      before { user2 }
+      before { another_user }
 
       it 'fails' do
         delete "/api/bookings/#{booking.id}",
-               headers: { Authorization: user2.token }
+               headers: { Authorization: another_user.token }
 
         expect(response).to have_http_status(:forbidden)
       end
 
       it 'responds with errors' do
         delete "/api/bookings/#{booking.id}",
-               headers: { Authorization: user2.token }
+               headers: { Authorization: another_user.token }
 
         expect(json_body)
           .to include('errors' => include('resource' => ['is forbidden']))
