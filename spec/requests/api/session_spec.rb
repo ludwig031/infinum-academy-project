@@ -22,7 +22,7 @@ RSpec.describe 'Companies API', type: :request do
 
       it 'responds with token information' do
         post '/api/session', params:
-            { 'session' => user_params }
+            { session: user_params }
 
         expect(json_body).to include('session' =>
                                          include('token' => user.token))
@@ -79,11 +79,11 @@ RSpec.describe 'Companies API', type: :request do
         expect(response).to have_http_status(:no_content)
       end
 
-      # it 'changes user token' do
-      #   expect { delete '/api/session',
-      # headers: { Authorization: user.token } }
-      #     .to change(user, :token)
-      # end
+      it 'changes user token' do
+        expect do
+          delete '/api/session', headers: { Authorization: user.token }
+        end.to(change { user.reload.token })
+      end
     end
 
     context 'when fails' do
