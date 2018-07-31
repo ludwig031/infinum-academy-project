@@ -16,7 +16,7 @@ module Api
     end
 
     def destroy
-      @current_user.regenerate_token
+      current_user.regenerate_token
       head :no_content
     end
 
