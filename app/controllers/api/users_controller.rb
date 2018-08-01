@@ -8,7 +8,6 @@ module Api
     end
 
     def show
-      user = User.find(params[:id])
       render json: user
     end
 
@@ -23,13 +22,10 @@ module Api
     end
 
     def destroy
-      user = User.find(params[:id])
-      user.destroy
+      user&.destroy
     end
 
     def update
-      user = User.find(params[:id])
-
       if user.update(user_params)
         render json: user
       else
@@ -39,8 +35,11 @@ module Api
 
     private
 
+    def user
+      @user ||= User.find(params[:id])
+    end
+
     def authorization
-      user = User.find(params[:id])
       return if current_user == user
       render json: { errors: { resource: ['is forbidden'] } },
              status: :forbidden
