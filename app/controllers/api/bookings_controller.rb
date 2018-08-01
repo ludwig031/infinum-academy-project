@@ -1,16 +1,18 @@
 module Api
   class BookingsController < ApplicationController
+    before_action :authorization, only: [:show, :update, :destroy]
+
     def index
-      render json: Booking.all
+      render json: current_user.bookings
     end
 
     def show
-      booking = Booking.find(params[:id])
       render json: booking
     end
 
     def create
       booking = Booking.new(booking_params)
+      booking.user_id = current_user.id
 
       if booking.save
         render json: booking, status: :created
@@ -20,13 +22,10 @@ module Api
     end
 
     def destroy
-      booking = Booking.find(params[:id])
-      booking.destroy
+      booking&.destroy
     end
 
     def update
-      booking = Booking.find(params[:id])
-
       if booking.update(booking_params)
         render json: booking
       else
@@ -36,10 +35,19 @@ module Api
 
     private
 
+    def booking
+      @booking ||= Booking.find(params[:id])
+    end
+
+    def authorization
+      return if current_user == booking.user
+      render json: { errors: { resource: ['is forbidden'] } },
+             status: :forbidden
+    end
+
     def booking_params
       params.require(:booking).permit(:no_of_seats,
                                       :seat_price,
-                                      :user_id,
                                       :flight_id)
     end
   end

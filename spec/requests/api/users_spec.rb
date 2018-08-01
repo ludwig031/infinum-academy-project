@@ -7,13 +7,26 @@ RSpec.describe 'Users API', type: :request do
     before { users }
 
     it 'returns http success' do
-      get '/api/users'
-      expect(response).to have_http_status(:success)
+      get '/api/users', headers: { Authorization: users[0].token }
+      expect(response).to have_http_status(:ok)
     end
 
     it 'returns list of users' do
-      get '/api/users'
+      get '/api/users', headers: { Authorization: users[0].token }
       expect(json_body['users'].length).to eq 3
+    end
+
+    context 'when unauthenticated' do
+      it 'fails' do
+        get '/api/users', headers: { Authorization: '' }
+        expect(response).to have_http_status(:unauthorized)
+      end
+
+      it 'responds with errors' do
+        get '/api/users', headers: { Authorization: '' }
+        expect(json_body)
+          .to include('errors' => include('token' => ['is invalid']))
+      end
     end
   end
 
@@ -21,13 +34,49 @@ RSpec.describe 'Users API', type: :request do
     let(:user) { FactoryBot.create(:user) }
 
     it 'returns http success' do
-      get "/api/users/#{user.id}"
-      expect(response).to have_http_status(:success)
+      get "/api/users/#{user.id}", headers: { Authorization: user.token }
+
+      expect(response).to have_http_status(:ok)
     end
 
     it 'returns a single user' do
-      get "/api/users/#{user.id}"
+      get "/api/users/#{user.id}", headers: { Authorization: user.token }
+
       expect(json_body).to include('user')
+    end
+
+    context 'when unauthenticated' do
+      it 'fails' do
+        get "/api/users/#{user.id}", headers: { Authorization: '' }
+        expect(response).to have_http_status(:unauthorized)
+      end
+
+      it 'responds with errors' do
+        get "/api/users/#{user.id}", headers: { Authorization: '' }
+        expect(json_body)
+          .to include('errors' => include('token' => ['is invalid']))
+      end
+    end
+
+    context 'when authenticated but unauthorized' do
+      let(:another_user) { FactoryBot.create(:user) }
+
+      before { another_user }
+
+      it 'fails' do
+        get "/api/users/#{another_user.id}",
+            headers: { Authorization: user.token }
+
+        expect(response).to have_http_status(:forbidden)
+      end
+
+      it 'responds with errors' do
+        get "/api/users/#{another_user.id}",
+            headers: { Authorization: user.token }
+
+        expect(json_body)
+          .to include('errors' => include('resource' => ['is forbidden']))
+      end
     end
   end
 
@@ -37,7 +86,8 @@ RSpec.describe 'Users API', type: :request do
         post '/api/users',
              params: { user: { first_name: 'Ljudevit',
                                last_name: 'Ludwig',
-                               email: 'mail-1@mail.com' } }
+                               email: 'mail-1@mail.com',
+                               password: 'Lozinka' } }
 
         expect(response).to have_http_status(:created)
       end
@@ -47,7 +97,8 @@ RSpec.describe 'Users API', type: :request do
           post '/api/users',
                params: { user: { first_name: 'Ljudevit',
                                  last_name: 'Ludwig',
-                                 email: 'mail-2@mail.com' } }
+                                 email: 'mail-2@mail.com',
+                                 password: 'Lozinka' } }
         end.to change(User, :count).by(+1)
       end
 
@@ -55,7 +106,8 @@ RSpec.describe 'Users API', type: :request do
         post '/api/users',
              params: { user: { first_name: 'Ljudevit',
                                last_name: 'Ludwig',
-                               email: 'mail-3@mail.com' } }
+                               email: 'mail-3@mail.com',
+                               password: 'Lozinka' } }
 
         expect(json_body).to include('user' => include('last_name' => 'Ludwig'))
       end
@@ -79,35 +131,75 @@ RSpec.describe 'Users API', type: :request do
   describe 'PATCH #update' do
     let(:user) { FactoryBot.create(:user) }
 
-    context 'when params are valid' do
+    context 'when params are valid password is changed' do
       it 'returns 200 OK' do
         put "/api/users/#{user.id}",
-            params: { user: { first_name: 'Ime' } }
+            params: { user: { password: 'New' } },
+            headers: { Authorization: user.token }
 
-        expect(response).to have_http_status(:success)
+        expect(response).to have_http_status(:ok)
       end
 
-      it 'returns a created booking' do
+      it 'returns a updated user' do
         put "/api/users/#{user.id}",
-            params: { user: { first_name: 'Ime' } }
+            params: { user: { first_name: 'Ime' } },
+            headers: { Authorization: user.token }
 
         expect(json_body).to include('user' => include('first_name' => 'Ime'))
       end
     end
 
-    context 'when params are invalid' do
+    context 'when password is nill' do
       it 'returns 400 Bad Request' do
         put "/api/users/#{user.id}",
-            params: { user: { first_name: '' } }
+            params: { user: { password: nil } },
+            headers: { Authorization: user.token }
 
         expect(response).to have_http_status(:bad_request)
       end
 
       it 'returns all errors' do
         put "/api/users/#{user.id}",
-            params: { user: { first_name: '' } }
+            params: { user: { password: nil } },
+            headers: { Authorization: user.token }
 
         expect(json_body).to include('errors')
+      end
+    end
+
+    context 'when unauthenticated' do
+      it 'fails' do
+        put "/api/users/#{user.id}", headers: { Authorization: '' }
+        expect(response).to have_http_status(:unauthorized)
+      end
+
+      it 'responds with errors' do
+        put "/api/users/#{user.id}", headers: { Authorization: '' }
+        expect(json_body)
+          .to include('errors' => include('token' => ['is invalid']))
+      end
+    end
+
+    context 'when authenticated but unauthorized' do
+      let(:another_user) { FactoryBot.create(:user) }
+
+      before { another_user }
+
+      it 'fails' do
+        put "/api/users/#{another_user.id}",
+            params: { user: { id: another_user.id, first_name: 'novo ime' } },
+            headers: { Authorization: user.token }
+
+        expect(response).to have_http_status(:forbidden)
+      end
+
+      it 'responds with errors' do
+        put "/api/users/#{another_user.id}",
+            params: { user: { id: another_user.id } },
+            headers: { Authorization: user.token }
+
+        expect(json_body)
+          .to include('errors' => include('resource' => ['is forbidden']))
       end
     end
   end
@@ -116,7 +208,7 @@ RSpec.describe 'Users API', type: :request do
     let(:user) { FactoryBot.create(:user) }
 
     it 'returns 204 No Content' do
-      delete "/api/users/#{user.id}"
+      delete "/api/users/#{user.id}", headers: { Authorization: user.token }
 
       expect(response).to have_http_status(:no_content)
     end
@@ -124,8 +216,42 @@ RSpec.describe 'Users API', type: :request do
     it 'decrements users count by one' do
       user
       expect do
-        delete "/api/users/#{user.id}"
+        delete "/api/users/#{user.id}", headers: { Authorization: user.token }
       end.to change(User, :count).by(-1)
+    end
+
+    context 'when unauthenticated' do
+      it 'fails' do
+        delete "/api/users/#{user.id}", headers: { Authorization: '' }
+        expect(response).to have_http_status(:unauthorized)
+      end
+
+      it 'responds with errors' do
+        delete "/api/users/#{user.id}", headers: { Authorization: '' }
+        expect(json_body)
+          .to include('errors' => include('token' => ['is invalid']))
+      end
+    end
+
+    context 'when authenticated but unauthorized' do
+      let(:another_user) { FactoryBot.create(:user) }
+
+      before { another_user }
+
+      it 'fails' do
+        delete "/api/users/#{another_user.id}",
+               headers: { Authorization: user.token }
+
+        expect(response).to have_http_status(:forbidden)
+      end
+
+      it 'responds with errors' do
+        delete "/api/users/#{another_user.id}",
+               headers: { Authorization: user.token }
+
+        expect(json_body)
+          .to include('errors' => include('resource' => ['is forbidden']))
+      end
     end
   end
 end

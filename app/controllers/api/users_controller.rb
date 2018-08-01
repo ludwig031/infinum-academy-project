@@ -1,11 +1,13 @@
 module Api
   class UsersController < ApplicationController
+    before_action :authentication, only: [:index, :show, :update, :destroy]
+    before_action :authorization, only: [:show, :update, :destroy]
+
     def index
       render json: User.all
     end
 
     def show
-      user = User.find(params[:id])
       render json: user
     end
 
@@ -20,13 +22,10 @@ module Api
     end
 
     def destroy
-      user = User.find(params[:id])
-      user.destroy
+      user&.destroy
     end
 
     def update
-      user = User.find(params[:id])
-
       if user.update(user_params)
         render json: user
       else
@@ -36,8 +35,21 @@ module Api
 
     private
 
+    def user
+      @user ||= User.find(params[:id])
+    end
+
+    def authorization
+      return if current_user == user
+      render json: { errors: { resource: ['is forbidden'] } },
+             status: :forbidden
+    end
+
     def user_params
-      params.require(:user).permit(:first_name, :last_name, :email)
+      params.require(:user).permit(:first_name,
+                                   :last_name,
+                                   :email,
+                                   :password)
     end
   end
 end
