@@ -3,7 +3,11 @@ module Api
     before_action :authorization, only: [:show, :update, :destroy]
 
     def index
-      render json: current_user.bookings
+      render json: if params[:filter] == 'active'
+                     current_user.bookings.active
+                   else
+                     current_user.bookings.ordered
+                   end
     end
 
     def show
@@ -48,7 +52,8 @@ module Api
     def booking_params
       params.require(:booking).permit(:no_of_seats,
                                       :seat_price,
-                                      :flight_id)
+                                      :flight_id,
+                                      :created_at)
     end
   end
 end
