@@ -22,7 +22,7 @@ class Flight < ApplicationRecord
   end
 
   def total_booked_seats
-    return if bookings.size > object.no_of_seats
+    return if bookings.size > no_of_seats
     errors.add(:no_of_seats, 'no more available seats')
   end
 end
