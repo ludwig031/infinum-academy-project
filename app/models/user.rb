@@ -17,4 +17,9 @@ class User < ApplicationRecord
   validates :password,
             presence: true,
             on: :create
+
+  def self.queried(query)
+    where('email LIKE :qry OR first_name LIKE :qry OR last_name LIKE :qry',
+          qry: query).order(:email)
+  end
 end
