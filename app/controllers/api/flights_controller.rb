@@ -1,7 +1,11 @@
 module Api
   class FlightsController < ApplicationController
     def index
-      render json: Flight.all
+      render json: if params[:company_id]
+                     Flight.by_company(params[:company_id])
+                   else
+                     Flight.active
+                   end
     end
 
     def show
