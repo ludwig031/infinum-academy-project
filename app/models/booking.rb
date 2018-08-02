@@ -20,9 +20,17 @@ class Booking < ApplicationRecord
   validates :user, presence: true
   validates :flight, presence: true
   validate :future_booking
+  validate :total_booked_seats
 
   def future_booking
     return if flight && flight.flys_at > Time.zone.now
     errors.add(:flys_at, 'must be booked in the future')
+  end
+
+  def total_booked_seats
+    no_of_booked_seats = Booking.where(flight_id: :flight)
+                                .sum(:no_of_seats)
+    return if no_of_booked_seats + object.no_of_seats < flight.no_of_seats
+    errors.add(:no_of_seats, 'no more available seats')
   end
 end
