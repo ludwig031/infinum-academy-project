@@ -1,11 +1,7 @@
 module Api
   class FlightsController < ApplicationController
     def index
-      render json: if params[:company_id]
-                     Flight.by_company(params[:company_id])
-                   else
-                     Flight.active
-                   end
+      render json: fetch_flights
     end
 
     def show
@@ -39,6 +35,14 @@ module Api
     end
 
     private
+
+    def fetch_flights
+      if params[:company_id]
+        Flight.by_company(params[:company_id])
+      else
+        Flight.active
+      end
+    end
 
     def flight_params
       params.require(:flight).permit(:name,
