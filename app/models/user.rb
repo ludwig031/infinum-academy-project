@@ -4,6 +4,12 @@ class User < ApplicationRecord
 
   has_many :bookings, dependent: :destroy
   has_many :flights, through: :bookings
+
+  scope :with_query, lambda { |query|
+    where('email LIKE :qry OR first_name LIKE :qry OR last_name LIKE :qry',
+          qry: query)
+  }
+
   validates :first_name,
             presence: true,
             length: { minimum: 2 }
@@ -17,9 +23,4 @@ class User < ApplicationRecord
   validates :password,
             presence: true,
             on: :create
-
-  def self.queried(query)
-    where('email LIKE :qry OR first_name LIKE :qry OR last_name LIKE :qry',
-          qry: query).order(:email)
-  end
 end
