@@ -25,4 +25,15 @@ class Flight < ApplicationRecord
     return if bookings.size > no_of_seats
     errors.add(:no_of_seats, 'no more available seats')
   end
+
+  def self.active
+    where('flys_at > ?', Time.zone.now)
+      .order(:flys_at, :name, :created_at).all
+  end
+
+  def self.by_company(company_ids)
+    ids = company_ids.split(',')
+    joins(:flight).where('flys_at > ? AND company.id IN ?', Time.zone.now, ids)
+                  .order(:flys_at, :name, :created_at).all
+  end
 end
