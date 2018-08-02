@@ -53,7 +53,7 @@ module Api
 
     def fetch_bookings
       if params[:filter] == 'active'
-        current_user.bookings.active
+        current_user.bookings.active.ordered
       else
         current_user.bookings.ordered
       end
