@@ -10,9 +10,10 @@ class FlightSerializer < ActiveModel::Serializer
   attribute :company_id
   attribute :company_name
   has_many :bookings
+  attribute :days_left
 
   def company_name
-    company&.name
+    object.company.name
   end
 
   def no_of_booked_seats
@@ -20,7 +21,12 @@ class FlightSerializer < ActiveModel::Serializer
   end
 
   def days_left
-    (object.flys_at - Date.now).to_i
+    difference = (object.flys_at.to_date - Time.zone.now.to_date).to_i
+    if difference.positive?
+      difference
+    else
+      0
+    end
   end
 
   def price
@@ -28,7 +34,7 @@ class FlightSerializer < ActiveModel::Serializer
   end
 
   def current_price
-    if price < 2 * object.base_price
+    if days_left.positive?
       price
     else
       2 * object.base_price
