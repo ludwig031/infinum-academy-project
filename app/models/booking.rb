@@ -30,7 +30,7 @@ class Booking < ApplicationRecord
   def total_booked_seats
     no_of_booked_seats = Booking.where(flight_id: :flight)
                                 .sum(:no_of_seats)
-    return if no_of_booked_seats + object.no_of_seats < flight.no_of_seats
+    return if no_of_booked_seats + no_of_seats < flight.no_of_seats
     errors.add(:no_of_seats, 'no more available seats')
   end
 end
