@@ -26,7 +26,11 @@ class FlightSerializer < ActiveModel::Serializer
   def days_left
     difference = (object.flys_at.to_date - Time.zone.now.to_date).to_i
     if difference.positive?
-      difference
+      if difference > 15
+        15
+      else
+        difference
+      end
     else
       0
     end
