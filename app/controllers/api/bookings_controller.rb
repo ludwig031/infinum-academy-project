@@ -13,6 +13,7 @@ module Api
     def create
       booking = Booking.new(booking_params)
       booking.user_id = current_user.id
+      booking.seat_price = seat_price
 
       if booking.save
         render json: booking, status: :created
@@ -45,9 +46,20 @@ module Api
              status: :forbidden
     end
 
+    def flight
+      Flight.find(params[:flight_id])
+    end
+
+    def days_left
+      (object.flys_at.to_date - Time.zone.now.to_date).to_i
+    end
+
+    def seat_price
+      (flight.base_price + days_left * (flight.base_price / 15)).round
+    end
+
     def booking_params
       params.require(:booking).permit(:no_of_seats,
-                                      :seat_price,
                                       :flight_id)
     end
 
