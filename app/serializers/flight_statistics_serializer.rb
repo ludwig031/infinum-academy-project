@@ -1,5 +1,5 @@
-class FlightStatisticsSerializer < FlightSerializer
-  attribute :id
+class FlightStatisticsSerializer < ActiveModel::Serializer
+  attribute :flight_id
   attribute :revenue
   attribute :no_of_booked_seats
   attribute :occupancy
