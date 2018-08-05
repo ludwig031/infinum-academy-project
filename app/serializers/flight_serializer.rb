@@ -10,8 +10,6 @@ class FlightSerializer < ActiveModel::Serializer
   attribute :company_id
   attribute :company_name
   attribute :no_of_booked_seats
-  has_many :bookings
-  attribute :days_left
 
   def company_name
     object.company.name

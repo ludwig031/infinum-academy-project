@@ -4,5 +4,4 @@ class UserSerializer < ActiveModel::Serializer
   attribute :last_name
   attribute :email
   has_many :bookings
-  has_many :flights
 end
