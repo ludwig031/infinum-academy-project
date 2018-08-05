@@ -27,10 +27,12 @@ class Booking < ApplicationRecord
     errors.add(:flight, 'must be booked in the future')
   end
 
+  def no_of_booked_seats
+    Booking.where('flight_id = ?', flight.id).sum(:no_of_seats)
+  end
+
   def not_overbooked
     return if flight.blank? || no_of_seats.blank?
-    no_of_booked_seats = Booking.where(flight_id: :flight)
-                                .sum(:no_of_seats)
     return if no_of_booked_seats + no_of_seats < flight.no_of_seats
     errors.add(:no_of_seats, 'no more available seats')
   end
