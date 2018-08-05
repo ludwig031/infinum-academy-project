@@ -30,8 +30,8 @@ class Flight < ApplicationRecord
   end
 
   def overlapping_flight
-    Flight.where("company_id = ? AND (DATE 'flys_at', DATE 'lands_at')
-                  OVERLAPS (DATE ?, DATE ?)",
+    Flight.where("company_id = ? AND (flys_at, lands_at)
+                  OVERLAPS (?, ?)",
                  company_id, flys_at, lands_at)
   end
 
