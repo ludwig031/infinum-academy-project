@@ -28,12 +28,14 @@ class Booking < ApplicationRecord
   end
 
   def no_of_booked_seats
-    Booking.where('flight_id = ?', flight.id).sum(:no_of_seats)
+    Booking.select('SUM(no_of_seats) AS booked_seats')
+           .find_by(flight_id: flight.id)
+           .no_of_booked_seats.to_i
   end
 
   def not_overbooked
-    return if flight.blank? || no_of_seats.blank?
-    return if no_of_booked_seats + no_of_seats < flight.no_of_seats
+    return if flight.nil? || no_of_seats.nil? ||
+              no_of_booked_seats + no_of_seats <= flight.no_of_seats
     errors.add(flight.no_of_seats, 'No more available seats')
   end
 end
