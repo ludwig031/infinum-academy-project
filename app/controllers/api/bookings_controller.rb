@@ -28,6 +28,7 @@ module Api
 
     def update
       if booking.update(booking_params)
+        booking.seat_price = seat_price
         render json: booking
       else
         render json: { errors: booking.errors }, status: :bad_request
@@ -46,18 +47,10 @@ module Api
              status: :forbidden
     end
 
-    def flight
-      parameters = params[:booking][:flight_id]
-      Flight.find(parameters) unless parameters.nil?
-    end
+    def seat_price(flight_id = booking_params[:flight_id])
+      return 0 if flight_id.nil?
 
-    def days_coefficient
-      difference = 15 - (flight.flys_at.to_date - Time.zone.now.to_date).to_i
-      difference.positive? ? difference : 0
-    end
-
-    def seat_price
-      (days_coefficient / 15 * flight.base_price + flight.base_price).round
+      Flight.find(flight_id).current_price
     end
 
     def booking_params

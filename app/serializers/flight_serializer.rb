@@ -22,17 +22,4 @@ class FlightSerializer < ActiveModel::Serializer
            .where('flights.company_id = ?', object.id)
            .sum('bookings.no_of_seats')
   end
-
-  def days_left
-    (object.flys_at.to_date - Time.zone.now.to_date).to_i
-  end
-
-  def days_coefficient
-    difference = 15 - days_left
-    difference.positive? ? difference : 0
-  end
-
-  def current_price
-    (days_coefficient / 15 * object.base_price + object.base_price).round
-  end
 end
