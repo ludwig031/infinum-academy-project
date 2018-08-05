@@ -41,8 +41,7 @@ module Api
 
     def fetch_users
       if params[:query]
-        query = params[:query].upcase
-        User.with_query(query).order(:email)
+        User.with_query(params[:query]).order(:email)
       else
         User.order(:email).all
       end
