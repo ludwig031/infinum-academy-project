@@ -18,9 +18,9 @@ class FlightStatisticsSerializer < FlightSerializer
 
   def occupancy
     if no_of_booked_seats.positive?
-      (no_of_booked_seats.to_f / object.no_of_seats) * 100
+      ((no_of_booked_seats.to_f / object.no_of_seats) * 100).to_s << '%'
     else
-      0
+      '0.0%'
     end
   end
 end
