@@ -18,7 +18,7 @@ class CompanyStatisticsSerializer < CompanySerializer
 
   def average_price_of_seats
     if total_no_of_booked_seats.positive?
-      total_revenue / total_no_of_booked_seats
+      total_revenue.to_f / total_no_of_booked_seats.to_f
     else
       0
     end
