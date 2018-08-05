@@ -22,9 +22,15 @@ class Flight < ApplicationRecord
             presence: true,
             numericality: { greater_than: 0 }
   validate :flys_at_before_lands_at
+  validate :not_overlaps
 
   def flys_at_before_lands_at
     return if flys_at && lands_at && (flys_at < lands_at)
     errors.add(:lands_at, 'take off time can not be after landing time')
+  end
+
+  def not_overlaps
+    return if Flight.where('flys_at <= ? AND lands_at >= ?', lands_at, flys_at)
+    errors.add(:flight, 'Flight overlaps with another flight')
   end
 end
