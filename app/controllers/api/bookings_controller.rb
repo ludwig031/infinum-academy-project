@@ -51,13 +51,13 @@ module Api
       Flight.find(parameters) unless parameters.nil?
     end
 
-    def days_left
-      days = (flight.flys_at.to_date - Time.zone.now.to_date).to_i
-      days > 15 ? 15 : days
+    def days_coefficient
+      difference = 15 - (object.flys_at.to_date - Time.zone.now.to_date).to_i
+      difference.positive? ? difference : 0
     end
 
-    def seat_price
-      (flight.base_price + days_left * (flight.base_price / 15)).round
+    def current_price
+      (days_coefficient / 15 * object.base_price + object.base_price).round
     end
 
     def booking_params

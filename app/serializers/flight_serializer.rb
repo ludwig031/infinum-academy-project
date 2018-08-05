@@ -23,28 +23,12 @@ class FlightSerializer < ActiveModel::Serializer
            .sum('bookings.no_of_seats')
   end
 
-  def days_left
-    difference = (object.flys_at.to_date - Time.zone.now.to_date).to_i
-    if difference.positive?
-      if difference > 15
-        15
-      else
-        difference
-      end
-    else
-      0
-    end
-  end
-
-  def price
-    (object.base_price + days_left * (object.base_price / 15)).round
+  def days_coefficient
+    difference = 15 - (object.flys_at.to_date - Time.zone.now.to_date).to_i
+    difference.positive? ? difference : 0
   end
 
   def current_price
-    if days_left.positive?
-      price
-    else
-      2 * object.base_price
-    end
+    (days_coefficient / 15 * object.base_price + object.base_price).round
   end
 end
