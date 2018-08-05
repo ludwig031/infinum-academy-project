@@ -30,7 +30,8 @@ class Flight < ApplicationRecord
   end
 
   def not_overlaps
-    return if Flight.where('flys_at <= ? AND lands_at >= ?', lands_at, flys_at)
+    return if Flight.where('flys_at <= ? AND lands_at >= ?',
+                           lands_at, flys_at).empty?
     errors.add(:flight, 'Flight overlaps with another flight')
   end
 end
