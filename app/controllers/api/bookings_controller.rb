@@ -56,7 +56,7 @@ module Api
       difference.positive? ? difference : 0
     end
 
-    def current_price
+    def seat_price
       (days_coefficient / 15 * flight.base_price + flight.base_price).round
     end
 
