@@ -34,7 +34,8 @@ class Flight < ApplicationRecord
     if Flight.where('id <> ? AND company_id = ? AND
                      (flys_at, lands_at) OVERLAPS (?, ?)',
                     id || 0, company_id, flys_at, lands_at).count.positive?
-      errors.add(:base, 'Selected flight overlaps with another flight')
+      errors.add(:flys_at, 'Selected flight overlaps with another flight')
+      errors.add(:lands_at, 'Selected flight overlaps with another flight')
     end
   end
 
