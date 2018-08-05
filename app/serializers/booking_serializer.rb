@@ -3,6 +3,8 @@ class BookingSerializer < ActiveModel::Serializer
   attribute :no_of_seats
   attribute :seat_price
   attribute :total_price
+  attribute :flight_name
+
   has_one :flight
 
   def flight_name
