@@ -38,7 +38,7 @@ module Api
 
     def fetch_flights
       if params[:company_id]
-        Flight.by_company(params[:company_id].split(',')).ordered
+        Flight.by_company(params[:company_id].split(',')).active.ordered
       else
         Flight.active.ordered
       end

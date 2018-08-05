@@ -3,8 +3,7 @@ class Flight < ApplicationRecord
   has_many :bookings, dependent: :destroy
 
   scope :by_company, lambda { |query|
-    joins(:company)
-      .where('flys_at > ? AND company.id IN (?)', Time.zone.now, query)
+    where(company_id: query).includes(:company)
   }
 
   scope :active, -> { where('flys_at > ?', Time.zone.now) }
