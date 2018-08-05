@@ -30,9 +30,9 @@ class Flight < ApplicationRecord
   end
 
   def overlapping_flight
-    Flight.where('company_id = ? AND (DATE flys_at, DATE lands_at)
-                  OVERLAPS (DATE ?, DATE ?)',
-                 :company_id, :lands_at, :flys_at)
+    Flight.where("company_id = ? AND (DATE 'flys_at', DATE 'lands_at')
+                  OVERLAPS (DATE ?, DATE ?)",
+                 company_id, flys_at, lands_at)
   end
 
   def not_overlaps
