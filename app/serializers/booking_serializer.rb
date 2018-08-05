@@ -4,6 +4,7 @@ class BookingSerializer < ActiveModel::Serializer
   attribute :seat_price
   attribute :total_price
   attribute :flight_name
+  attribute :company_name
 
   has_one :flight
 
