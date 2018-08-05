@@ -5,6 +5,8 @@ class BookingSerializer < ActiveModel::Serializer
   attribute :total_price
   attribute :flight_name
   attribute :company_name
+  attribute :flys_at
+  attribute :lands_at
 
   has_one :flight
 
@@ -14,6 +16,10 @@ class BookingSerializer < ActiveModel::Serializer
 
   def flys_at
     object.flight.flys_at
+  end
+
+  def lands_at
+    object.flight.lands_at
   end
 
   def company_name
