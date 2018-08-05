@@ -28,7 +28,7 @@ class Booking < ApplicationRecord
   end
 
   def not_overbooked
-    return if flight_id.blank? || no_of_seats.blank?
+    return if flight.blank? || no_of_seats.blank?
     no_of_booked_seats = Booking.where(flight_id: :flight)
                                 .sum(:no_of_seats)
     return if no_of_booked_seats + no_of_seats < flight.no_of_seats
