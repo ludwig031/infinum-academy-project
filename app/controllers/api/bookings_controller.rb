@@ -47,7 +47,7 @@ module Api
     end
 
     def flight
-      Flight.find(params[:flight_id])
+      Flight.find(params[:booking][:flight_id])
     end
 
     def days_left
