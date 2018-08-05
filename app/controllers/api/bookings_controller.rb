@@ -52,12 +52,12 @@ module Api
     end
 
     def days_coefficient
-      difference = 15 - (object.flys_at.to_date - Time.zone.now.to_date).to_i
+      difference = 15 - (flight.flys_at.to_date - Time.zone.now.to_date).to_i
       difference.positive? ? difference : 0
     end
 
     def current_price
-      (days_coefficient / 15 * object.base_price + object.base_price).round
+      (days_coefficient / 15 * flight.base_price + flight.base_price).round
     end
 
     def booking_params
