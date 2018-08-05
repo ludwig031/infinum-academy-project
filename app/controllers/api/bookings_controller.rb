@@ -51,8 +51,8 @@ module Api
     end
 
     def days_left
-      return if (object.flys_at.to_date - Time.zone.now.to_date).to_i < 15
-      15
+      days = (flight.flys_at.to_date - Time.zone.now.to_date).to_i
+      days > 15 ? 15 : days
     end
 
     def seat_price
