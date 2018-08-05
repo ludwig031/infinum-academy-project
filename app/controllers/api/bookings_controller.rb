@@ -47,8 +47,8 @@ module Api
     end
 
     def flight
-      params = params[:booking][:flight_id]
-      Flight.find(params) unless params.nil?
+      parameters = params[:booking][:flight_id]
+      Flight.find(parameters) unless parameters.nil?
     end
 
     def days_left
