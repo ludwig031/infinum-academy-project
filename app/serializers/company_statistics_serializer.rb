@@ -4,6 +4,10 @@ class CompanyStatisticsSerializer < ActiveModel::Serializer
   attribute :total_no_of_booked_seats
   attribute :average_price_of_seats
 
+  def company_id
+    object.id
+  end
+
   def total_revenue
     Booking.joins(:flight)
            .where('flights.company_id = ?', object.id)

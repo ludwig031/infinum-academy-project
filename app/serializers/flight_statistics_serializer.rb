@@ -4,6 +4,10 @@ class FlightStatisticsSerializer < ActiveModel::Serializer
   attribute :no_of_booked_seats
   attribute :occupancy
 
+  def flight_id
+    object.id
+  end
+
   def revenue
     Booking.joins(:flight)
            .where('flights.id = ?', object.id)
