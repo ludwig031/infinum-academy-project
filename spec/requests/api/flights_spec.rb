@@ -27,6 +27,24 @@ RSpec.describe 'Flights API', type: :request do
                                              .sort_by { |o| o['created_at'] })
     end
 
+    it 'contains no_of_booked_seats' do
+      get '/api/flights', headers: { Authorization: user.token }
+
+      expect(json_body['flights'][0]).to include('no_of_booked_seats')
+    end
+
+    it 'containes company_name' do
+      get '/api/flights', headers: { Authorization: user.token }
+
+      expect(json_body['flights'][0]).to include('company_name')
+    end
+
+    it 'containes current_price' do
+      get '/api/flights', headers: { Authorization: user.token }
+
+      expect(json_body['flights'][0]).to include('current_price')
+    end
+
     context 'when unauthenticated' do
       it 'fails' do
         get '/api/flights', headers: { Authorization: '' }
