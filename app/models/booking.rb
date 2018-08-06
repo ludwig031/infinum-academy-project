@@ -29,7 +29,7 @@ class Booking < ApplicationRecord
 
   def no_of_booked_seats
     @no_of_booked_seats ||= flight.bookings
-                                  .where.not(flight_id: flight.id)
+                                  .where.not(id: :id)
                                   .sum(no_of_seats)
   end
 
