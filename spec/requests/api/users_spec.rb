@@ -17,11 +17,16 @@ RSpec.describe 'Users API', type: :request do
     end
 
     it 'returns sorted users' do
-      get '/api/users',
-          headers: { Authorization: users.first.token }
+      get '/api/users', headers: { Authorization: users.first.token }
 
       expect(json_body['users']).to eq(json_body['users']
                                            .sort_by { |o| o['email'] })
+    end
+
+    it 'contanies bookings association' do
+      get '/api/users', headers: { Authorization: users.first.token }
+
+      expect(json_body['users'][0]).to include('bookings')
     end
 
     context 'when unauthenticated' do
