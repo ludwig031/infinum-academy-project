@@ -16,6 +16,14 @@ RSpec.describe 'Users API', type: :request do
       expect(json_body['users'].length).to eq 3
     end
 
+    it 'returns sorted users' do
+      get '/api/users',
+          headers: { Authorization: users.first.token }
+
+      expect(json_body['users']).to eq(json_body['users']
+                                           .sort_by { |o| o['email'] })
+    end
+
     context 'when unauthenticated' do
       it 'fails' do
         get '/api/users', headers: { Authorization: '' }
