@@ -27,22 +27,29 @@ RSpec.describe 'Flights API', type: :request do
                                              .sort_by { |o| o['created_at'] })
     end
 
-    it 'contains no_of_booked_seats' do
+    it 'returns no_of_booked_seats' do
       get '/api/flights', headers: { Authorization: user.token }
 
       expect(json_body['flights'][0]).to include('no_of_booked_seats')
     end
 
-    it 'containes company_name' do
+    it 'returns company_name' do
       get '/api/flights', headers: { Authorization: user.token }
 
       expect(json_body['flights'][0]).to include('company_name')
     end
 
-    it 'containes current_price' do
+    it 'returns current_price' do
       get '/api/flights', headers: { Authorization: user.token }
 
       expect(json_body['flights'][0]).to include('current_price')
+    end
+
+    it 'returns current_price correctly' do
+      get '/api/flights', headers: { Authorization: user.token }
+
+      seat_price = (flights.first.base_price * (25.0 / 15)).round
+      expect(json_body['flights'][0]['current_price']).to eq(seat_price)
     end
 
     context 'when unauthenticated' do
