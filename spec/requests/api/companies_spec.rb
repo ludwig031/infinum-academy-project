@@ -18,6 +18,13 @@ RSpec.describe 'Companies API', type: :request do
       expect(json_body['companies'].length).to eq 3
     end
 
+    it 'companies are sorted' do
+      get '/api/companies', headers: { Authorization: user.token }
+
+      expect(json_body['companies']).to eq(json_body['companies']
+                                               .sort_by { |o| o['name'] })
+    end
+
     context 'when unauthenticated' do
       it 'fails' do
         get '/api/companies', headers: { Authorization: '' }
