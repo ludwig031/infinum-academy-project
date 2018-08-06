@@ -12,6 +12,6 @@ RSpec.describe Booking, type: :model do
     booking = FactoryBot.build(:booking,
                                flight: flight)
     booking.valid?
-    expect(booking.errors[:flys_at]).to include('must be booked in the future')
+    expect(booking.errors[:flight]).to include('must be booked in the future')
   end
 end
