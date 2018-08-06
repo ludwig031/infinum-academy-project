@@ -26,25 +26,25 @@ RSpec.describe 'Statistics Company API', type: :request do
       expect(json_body['companies'].length).to eq(3)
     end
 
-    it 'contains flight_id' do
+    it 'returns flight_id' do
       get '/api/statistics/companies', headers: { Authorization: user.token }
 
       expect(json_body['companies'][0]).to include('company_id')
     end
 
-    it 'containes total_revenue' do
+    it 'returns total_revenue' do
       get '/api/statistics/companies', headers: { Authorization: user.token }
 
       expect(json_body['companies'][0]).to include('total_revenue')
     end
 
-    it 'containes total_no_of_booked_seats' do
+    it 'returns total_no_of_booked_seats' do
       get '/api/statistics/companies', headers: { Authorization: user.token }
 
       expect(json_body['companies'][0]).to include('total_no_of_booked_seats')
     end
 
-    it 'containes average_price_of_seats' do
+    it 'returns average_price_of_seats' do
       get '/api/statistics/companies', headers: { Authorization: user.token }
 
       expect(json_body['companies'][0]).to include('average_price_of_seats')
