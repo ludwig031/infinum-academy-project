@@ -36,12 +36,12 @@ module Api
       end
     end
 
+    private
+
     def render_bad_request
       render json: { errors: { company: ['is missing'] } },
              status: :bad_request
     end
-
-    private
 
     def fetch_companies
       if params[:filter] == 'active'
