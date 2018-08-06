@@ -30,13 +30,13 @@ class Flight < ApplicationRecord
   end
 
   def overlapping
+    return if company_id.nil?
     company.flights.where.not(id: id || 0)
            .where('(flys_at, lands_at) OVERLAPS (?, ?)', flys_at, lands_at)
            .exists?
   end
 
   def not_overlaps
-    return if company_id.nil?
     return unless overlapping
 
     errors.add(:flys_at, 'Selected flight overlaps with another flight')
