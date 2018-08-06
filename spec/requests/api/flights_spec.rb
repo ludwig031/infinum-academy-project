@@ -177,6 +177,18 @@ RSpec.describe 'Flights API', type: :request do
 
         expect(json_body).to include('errors')
       end
+
+      it 'flights from same company are overlaping' do
+        first = FactoryBot.create(:flight)
+        post '/api/flights',
+             params: { flight: { name: 'flight_name', no_of_seats: 10,
+                                 base_price: 100, flys_at: first.flys_at,
+                                 lands_at: first.lands_at,
+                                 company_id: first.company_id } },
+             headers: { Authorization: user.token }
+
+        expect(json_body['errors']).to include('flys_at')
+      end
     end
 
     context 'when unauthenticated' do
