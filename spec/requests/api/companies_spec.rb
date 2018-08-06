@@ -46,6 +46,35 @@ RSpec.describe 'Companies API', type: :request do
     end
   end
 
+  describe 'GET /api/companies?filter=active' do
+    let(:first) { FactoryBot.create(:flight) }
+    let(:companies) { FactoryBot.create_list(:company, 2) }
+
+    before do
+      first
+      companies
+    end
+
+    it 'returns status code 200' do
+      get '/api/companies?filter=active', headers: { Authorization: user.token }
+
+      expect(response).to have_http_status(:ok)
+    end
+
+    it 'successfully returns 1 company' do
+      get '/api/companies?filter=active', headers: { Authorization: user.token }
+
+      expect(json_body['companies'].length).to eq(1)
+    end
+
+    it 'companies are sorted' do
+      get '/api/companies?filter=active', headers: { Authorization: user.token }
+
+      expect(json_body['companies']).to eq(json_body['companies']
+                                               .sort_by { |o| o['name'] })
+    end
+  end
+
   describe 'GET #show' do
     let(:company) { FactoryBot.create(:company) }
 
