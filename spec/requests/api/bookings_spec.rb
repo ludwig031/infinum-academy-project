@@ -30,6 +30,18 @@ RSpec.describe 'Bookings API', type: :request do
                      .sort_by { |o| o['created_at'] })
     end
 
+    it 'contains total_price' do
+      get '/api/bookings', headers: { Authorization: user.token }
+
+      expect(json_body['bookings'][0]).to include('total_price')
+    end
+
+    it 'contains flight' do
+      get '/api/bookings', headers: { Authorization: user.token }
+
+      expect(json_body['bookings'][0]).to include('flight')
+    end
+
     context 'when unauthenticated' do
       it 'fails' do
         get '/api/bookings', headers: { Authorization: '' }
