@@ -117,7 +117,7 @@ RSpec.describe 'Bookings API', type: :request do
                                   user: user } },
              headers: { Authorization: user.token }
 
-        expect(json_body).to include('booking' => include('seat_price' => 2))
+        expect(json_body).to include('booking' => include('no_of_seats' => 1))
       end
     end
 
@@ -159,7 +159,7 @@ RSpec.describe 'Bookings API', type: :request do
     context 'when params are valid' do
       it 'returns 200 OK' do
         put "/api/bookings/#{booking.id}",
-            params: { booking: { seat_price: 5 } },
+            params: { booking: { no_of_seats: 1 } },
             headers: { Authorization: user.token }
 
         expect(response).to have_http_status(:ok)
@@ -167,17 +167,17 @@ RSpec.describe 'Bookings API', type: :request do
 
       it 'returns a created booking' do
         put "/api/bookings/#{booking.id}",
-            params: { booking: { seat_price: 25 } },
+            params: { booking: { no_of_seats: 1 } },
             headers: { Authorization: user.token }
 
-        expect(json_body).to include('booking' => include('seat_price' => 25))
+        expect(json_body).to include('booking' => include('no_of_seats' => 1))
       end
     end
 
     context 'when params are invalid' do
       it 'returns 400 Bad Request' do
         put "/api/bookings/#{booking.id}",
-            params: { booking: { seat_price: '' } },
+            params: { booking: { no_of_seats: '' } },
             headers: { Authorization: user.token }
 
         expect(response).to have_http_status(:bad_request)
@@ -185,7 +185,7 @@ RSpec.describe 'Bookings API', type: :request do
 
       it 'returns all errors' do
         put "/api/bookings/#{booking.id}",
-            params: { booking: { seat_price: '' } },
+            params: { booking: { no_of_seats: '' } },
             headers: { Authorization: user.token }
 
         expect(json_body).to include('errors')
