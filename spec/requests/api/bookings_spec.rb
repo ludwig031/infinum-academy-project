@@ -20,6 +20,16 @@ RSpec.describe 'Bookings API', type: :request do
       expect(json_body['bookings'].length).to eq 3
     end
 
+    it 'returns sorted bookings' do
+      get '/api/bookings', headers: { Authorization: user.token }
+
+      expect(json_body['bookings'])
+        .to eq(json_body['bookings']
+                     .sort_by { |o| o['flight']['flys_at'] }
+                     .sort_by { |o| o['flight']['name'] }
+                     .sort_by { |o| o['created_at'] })
+    end
+
     context 'when unauthenticated' do
       it 'fails' do
         get '/api/bookings', headers: { Authorization: '' }
