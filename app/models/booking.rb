@@ -28,9 +28,7 @@ class Booking < ApplicationRecord
   end
 
   def no_of_booked_seats
-    @no_of_booked_seats ||= Booking.select('SUM(no_of_seats) AS booked_seats')
-                                   .find_by(flight_id: flight.id)
-                                   .booked_seats.to_i
+    @no_of_booked_seats ||= flight.bookings.sum(no_of_seats)
   end
 
   def not_overbooked
