@@ -27,8 +27,7 @@ module Api
     end
 
     def update
-      if booking.update(booking_params)
-        booking.attributes[:seat_price] = seat_price
+      if booking.update(booking_params.merge(seat_price: seat_price))
         render json: booking
       else
         render json: { errors: booking.errors }, status: :bad_request
