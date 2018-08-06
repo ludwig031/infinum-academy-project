@@ -29,14 +29,18 @@ class Flight < ApplicationRecord
     errors.add(:lands_at, 'take off time can not be after landing time')
   end
 
+  def overlapping
+    company.flights.where.not(id: id || 0)
+           .where('(flys_at, lands_at) OVERLAPS (?, ?)', flys_at, lands_at)
+           .exists?
+  end
+
   def not_overlaps
     return if company_id.nil?
-    if Flight.where('id <> ? AND company_id = ? AND
-                     (flys_at, lands_at) OVERLAPS (?, ?)',
-                    id || 0, company_id, flys_at, lands_at).count.positive?
-      errors.add(:flys_at, 'Selected flight overlaps with another flight')
-      errors.add(:lands_at, 'Selected flight overlaps with another flight')
-    end
+    return unless overlapping
+
+    errors.add(:flys_at, 'Selected flight overlaps with another flight')
+    errors.add(:lands_at, 'Selected flight overlaps with another flight')
   end
 
   def current_price
