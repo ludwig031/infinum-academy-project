@@ -66,6 +66,29 @@ RSpec.describe 'Flights API', type: :request do
     end
   end
 
+  describe 'GET /api/flights?company_id=' do
+    let(:flights) { FactoryBot.create_list(:flight, 3) }
+
+    before do
+      flights
+    end
+
+    it 'successfully returns list of flights' do
+      get "/api/flights?company_id=#{flights.first.company_id}",
+          headers: { Authorization: user.token }
+
+      expect(response).to have_http_status(:ok)
+    end
+
+    it 'returns 2 flights' do
+      get "/api/flights?company_id=#{flights.first.company_id},
+           #{flights.last.company_id}",
+          headers: { Authorization: user.token }
+
+      expect(json_body['flights'].length).to eq(2)
+    end
+  end
+
   describe 'GET #show' do
     let(:flight) { FactoryBot.create(:flight) }
 
