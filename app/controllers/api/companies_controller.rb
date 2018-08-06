@@ -1,5 +1,7 @@
 module Api
   class CompaniesController < ApplicationController
+    rescue_from ActionController::BadRequest, with: :render_bad_request
+
     def index
       render json: fetch_companies
     end
@@ -32,6 +34,11 @@ module Api
       else
         render json: { errors: company.errors }, status: :bad_request
       end
+    end
+
+    def render_bad_request
+      render json: { errors: { company: ['is missing'] } },
+             status: :bad_request
     end
 
     private
