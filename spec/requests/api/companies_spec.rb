@@ -25,6 +25,13 @@ RSpec.describe 'Companies API', type: :request do
                                                .sort_by { |o| o['name'] })
     end
 
+    it 'containes no_of_active_flights' do
+      get '/api/companies',
+          headers: { Authorization: user.token }
+
+      expect(json_body['companies'][0]).to include('no_of_active_flights')
+    end
+
     context 'when unauthenticated' do
       it 'fails' do
         get '/api/companies', headers: { Authorization: '' }
