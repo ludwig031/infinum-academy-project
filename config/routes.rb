@@ -6,8 +6,10 @@ Rails.application.routes.draw do
     resources :bookings, except: [:new, :edit]
     resource :session, only: [:create, :destroy]
 
-    get 'statistics/companies', to: 'companies_statistics#index'
-    get 'statistics/flights', to: 'flights_statistics#index'
+    namespace :statistics do
+      resources :companies, only: [:index, :destroy]
+      resources :flights, only: [:index, :destroy]
+    end
   end
 
   ActiveAdmin.routes(self)
