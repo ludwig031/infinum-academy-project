@@ -13,9 +13,18 @@ RSpec.describe 'Flights API', type: :request do
       expect(response).to have_http_status(:ok)
     end
 
-    it 'returns list of flights' do
+    it 'returns list of all active flights' do
       get '/api/flights', headers: { Authorization: user.token }
       expect(json_body['flights'].length).to eq 3
+    end
+
+    it 'returns sorted flights' do
+      get '/api/flights', headers: { Authorization: user.token }
+
+      expect(json_body['flights']).to eq(json_body['flights']
+                                             .sort_by { |o| o['flys_at'] }
+                                             .sort_by { |o| o['name'] }
+                                             .sort_by { |o| o['created_at'] })
     end
 
     context 'when unauthenticated' do
