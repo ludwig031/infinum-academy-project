@@ -144,6 +144,9 @@ RSpec.describe 'Bookings API', type: :request do
     end
 
     context 'when params are invalid' do
+      let(:flight) { FactoryBot.create(:flight) }
+      let(:user) { FactoryBot.create(:user) }
+
       it 'returns 400 Bad Request' do
         post '/api/bookings',
              params: { booking: { seat_price: '' } },
@@ -158,6 +161,15 @@ RSpec.describe 'Bookings API', type: :request do
              headers: { Authorization: user.token }
 
         expect(json_body).to include('errors')
+      end
+
+      it 'flight is overbooked' do
+        post '/api/bookings',
+             params: { booking: { flight_id: flight.id,
+                                  no_of_seats: flight.no_of_seats + 1 } },
+             headers: { Authorization: user.token }
+
+        expect(json_body['errors']).to include('flight')
       end
     end
 
