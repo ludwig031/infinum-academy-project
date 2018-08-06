@@ -1,5 +1,7 @@
 module Api
   class FlightsController < ApplicationController
+    rescue_from ActionController::BadRequest, with: :render_bad_request
+
     def index
       render json: fetch_flights
     end
@@ -35,6 +37,11 @@ module Api
     end
 
     private
+
+    def render_bad_request
+      render json: { errors: { flight: ['is missing'] } },
+             status: :bad_request
+    end
 
     def fetch_flights
       if params[:company_id]
