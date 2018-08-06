@@ -1,5 +1,7 @@
 # ApplicationController class inherits a constructor from ActionController::Base
 class ApplicationController < ActionController::Base
+  rescue_from ActiveRecord::RecordNotFound, with: :render_404
+
   skip_before_action :verify_authenticity_token
   before_action :authentication
 
@@ -21,5 +23,9 @@ class ApplicationController < ActionController::Base
                WorldCup.matches
              end
     render json: output
+  end
+
+  def render_404
+    render json: { errors: { resource: ["doesn't exist"] } }, status: :not_found
   end
 end
