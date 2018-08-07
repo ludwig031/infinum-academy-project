@@ -5,7 +5,7 @@ class FlightStatisticsSerializer < ActiveModel::Serializer
   attribute :occupancy
 
   def occupancy
-    if object.nil?
+    if object.no_of_booked_seats.nil?
       '0.0%'
     else
       ((object.no_of_booked_seats.to_f / object.no_of_seats) * 100).to_s << '%'
