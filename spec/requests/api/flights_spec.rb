@@ -64,28 +64,28 @@ RSpec.describe 'Flights API', type: :request do
           .to include('errors' => include('token' => ['is invalid']))
       end
     end
-  end
 
-  describe 'GET /api/flights?company_id=' do
-    let(:flights) { FactoryBot.create_list(:flight, 3) }
+    context 'when query provided responds with flights' do
+      let(:flights) { FactoryBot.create_list(:flight, 3) }
 
-    before do
-      flights
-    end
+      before do
+        flights
+      end
 
-    it 'successfully returns list of flights' do
-      get "/api/flights?company_id=#{flights.first.company_id}",
-          headers: { Authorization: user.token }
+      it 'successfully returns list of flights' do
+        get "/api/flights?company_id=#{flights.first.company_id}",
+            headers: { Authorization: user.token }
 
-      expect(response).to have_http_status(:ok)
-    end
+        expect(response).to have_http_status(:ok)
+      end
 
-    it 'returns 2 flights' do
-      get "/api/flights?company_id=#{flights.first.company_id},
+      it 'returns 2 flights' do
+        get "/api/flights?company_id=#{flights.first.company_id},
            #{flights.last.company_id}",
-          headers: { Authorization: user.token }
+            headers: { Authorization: user.token }
 
-      expect(json_body['flights'].length).to eq(2)
+        expect(json_body['flights'].length).to eq(2)
+      end
     end
   end
 

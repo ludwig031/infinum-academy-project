@@ -41,43 +41,43 @@ RSpec.describe 'Users API', type: :request do
           .to include('errors' => include('token' => ['is invalid']))
       end
     end
-  end
 
-  describe 'GET /api/users?query=' do
-    let(:first) do
-      FactoryBot.create(:user, first_name: 'Borna',
-                               last_name: 'Matijanic',
-                               email: 'borna@mail.com')
-    end
-    let(:second) do
-      FactoryBot.create(:user, first_name: 'Imen',
-                               last_name: 'Prezimenic',
-                               email: 'imen@mail.com')
-    end
+    describe 'when query provided responds with users' do
+      let(:first) do
+        FactoryBot.create(:user, first_name: 'Borna',
+                                 last_name: 'Matijanic',
+                                 email: 'borna@mail.com')
+      end
+      let(:second) do
+        FactoryBot.create(:user, first_name: 'Imen',
+                                 last_name: 'Prezimenic',
+                                 email: 'imen@mail.com')
+      end
 
-    before do
-      first
-      second
-    end
+      before do
+        first
+        second
+      end
 
-    it 'returns status code 200' do
-      get '/api/users?query=a',
-          headers: { Authorization: first.token }
-      expect(response).to have_http_status(:ok)
-    end
+      it 'returns status code 200' do
+        get '/api/users?query=a',
+            headers: { Authorization: first.token }
+        expect(response).to have_http_status(:ok)
+      end
 
-    it 'successfully matches both' do
-      get '/api/users?query=ic',
-          headers: { Authorization: first.token }
+      it 'successfully matches both' do
+        get '/api/users?query=ic',
+            headers: { Authorization: first.token }
 
-      expect(json_body['users'].length).to eq(2)
-    end
+        expect(json_body['users'].length).to eq(2)
+      end
 
-    it 'successfully matches first_name' do
-      get '/api/users?query=borN',
-          headers: { Authorization: first.token }
+      it 'successfully matches first_name' do
+        get '/api/users?query=borN',
+            headers: { Authorization: first.token }
 
-      expect(json_body['users'].length).to eq(1)
+        expect(json_body['users'].length).to eq(1)
+      end
     end
   end
 
