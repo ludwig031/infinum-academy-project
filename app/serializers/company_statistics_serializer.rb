@@ -8,23 +8,11 @@ class CompanyStatisticsSerializer < ActiveModel::Serializer
     object.id
   end
 
-  def total_revenue
-    Booking.joins(:flight)
-           .where('flights.company_id = ?', object.id)
-           .sum('seat_price * bookings.no_of_seats')
-  end
-
-  def total_no_of_booked_seats
-    Booking.joins(:flight)
-           .where('flights.company_id = ?', object.id)
-           .sum('bookings.no_of_seats')
-  end
-
   def average_price_of_seats
-    if total_no_of_booked_seats.positive?
-      total_revenue.to_f / total_no_of_booked_seats.to_f
-    else
+    if object.total_no_of_booked_seats.zero?
       0
+    else
+      object.total_revenue.to_f / object.total_no_of_booked_seats.to_f
     end
   end
 end
