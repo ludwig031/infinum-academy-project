@@ -104,8 +104,7 @@ RSpec.describe 'Users API', type: :request do
 
       it 'responds with errors' do
         get "/api/users/#{user.id}", headers: { Authorization: '' }
-        expect(json_body)
-          .to include('errors' => include('token' => ['is invalid']))
+        expect(json_body['errors']).to include('token' => ['is invalid'])
       end
     end
 
@@ -125,8 +124,7 @@ RSpec.describe 'Users API', type: :request do
         get "/api/users/#{another_user.id}",
             headers: { Authorization: user.token }
 
-        expect(json_body)
-          .to include('errors' => include('resource' => ['is forbidden']))
+        expect(json_body['errors']).to include('resource' => ['is forbidden'])
       end
     end
   end
@@ -160,7 +158,7 @@ RSpec.describe 'Users API', type: :request do
                                email: 'mail-3@mail.com',
                                password: 'Lozinka' } }
 
-        expect(json_body).to include('user' => include('last_name' => 'Ludwig'))
+        expect(json_body['user']).to include('last_name' => 'Ludwig')
       end
     end
 
@@ -196,7 +194,7 @@ RSpec.describe 'Users API', type: :request do
             params: { user: { first_name: 'Ime' } },
             headers: { Authorization: user.token }
 
-        expect(json_body).to include('user' => include('first_name' => 'Ime'))
+        expect(json_body['user']).to include('first_name' => 'Ime')
       end
     end
 
@@ -226,8 +224,7 @@ RSpec.describe 'Users API', type: :request do
 
       it 'responds with errors' do
         put "/api/users/#{user.id}", headers: { Authorization: '' }
-        expect(json_body)
-          .to include('errors' => include('token' => ['is invalid']))
+        expect(json_body['errors']).to include('token' => ['is invalid'])
       end
     end
 
@@ -249,8 +246,7 @@ RSpec.describe 'Users API', type: :request do
             params: { user: { id: another_user.id } },
             headers: { Authorization: user.token }
 
-        expect(json_body)
-          .to include('errors' => include('resource' => ['is forbidden']))
+        expect(json_body['errors']).to include('resource' => ['is forbidden'])
       end
     end
   end
@@ -279,8 +275,7 @@ RSpec.describe 'Users API', type: :request do
 
       it 'responds with errors' do
         delete "/api/users/#{user.id}", headers: { Authorization: '' }
-        expect(json_body)
-          .to include('errors' => include('token' => ['is invalid']))
+        expect(json_body['errors']).to include('token' => ['is invalid'])
       end
     end
 
@@ -300,8 +295,7 @@ RSpec.describe 'Users API', type: :request do
         delete "/api/users/#{another_user.id}",
                headers: { Authorization: user.token }
 
-        expect(json_body)
-          .to include('errors' => include('resource' => ['is forbidden']))
+        expect(json_body['errors']).to include('resource' => ['is forbidden'])
       end
     end
   end

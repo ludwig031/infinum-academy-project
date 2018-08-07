@@ -199,8 +199,8 @@ RSpec.describe 'Flights API', type: :request do
 
       it 'responds with errors' do
         post '/api/flights', headers: { Authorization: '' }
-        expect(json_body)
-          .to include('errors' => include('token' => ['is invalid']))
+        expect(json_body['errors'])
+          .to include('token' => ['is invalid'])
       end
     end
   end
@@ -222,7 +222,7 @@ RSpec.describe 'Flights API', type: :request do
             params: { flight: { name: 'Ryanair' } },
             headers: { Authorization: user.token }
 
-        expect(json_body).to include('flight' => include('name' => 'Ryanair'))
+        expect(json_body['flight']).to include('name' => 'Ryanair')
       end
     end
 
@@ -252,8 +252,7 @@ RSpec.describe 'Flights API', type: :request do
 
       it 'responds with errors' do
         put "/api/flights/#{flight.id}", headers: { Authorization: '' }
-        expect(json_body)
-          .to include('errors' => include('token' => ['is invalid']))
+        expect(json_body['errors']).to include('token' => ['is invalid'])
       end
     end
   end
@@ -284,8 +283,7 @@ RSpec.describe 'Flights API', type: :request do
 
       it 'responds with errors' do
         delete "/api/flights/#{flight.id}", headers: { Authorization: '' }
-        expect(json_body)
-          .to include('errors' => include('token' => ['is invalid']))
+        expect(json_body['errors']).to include('token' => ['is invalid'])
       end
     end
   end
