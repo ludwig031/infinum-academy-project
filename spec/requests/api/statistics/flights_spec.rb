@@ -28,12 +28,6 @@ RSpec.describe 'Statistics Flights API', type: :request do
       expect(json_body).to include('flights')
     end
 
-    it 'successfully returns 3 flights' do
-      get '/api/statistics/flights', headers: { Authorization: user.token }
-
-      expect(json_body['flights'].length).to eq(3)
-    end
-
     it 'returns flight_id' do
       get '/api/statistics/flights', headers: { Authorization: user.token }
 
