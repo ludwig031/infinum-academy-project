@@ -6,9 +6,9 @@ class User < ApplicationRecord
   has_many :flights, through: :bookings
 
   scope :with_query, lambda { |query|
-    where('UPPER(email) ILIKE :query OR
-           UPPER(first_name) ILIKE :query OR
-           UPPER(last_name) ILIKE :query',
+    where('email ILIKE :query OR
+           first_name ILIKE :query OR
+           last_name ILIKE :query',
           query: "%#{query}%")
   }
 
