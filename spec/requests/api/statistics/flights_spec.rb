@@ -11,10 +11,7 @@ RSpec.describe 'Statistics Flights API', type: :request do
                              flight_id: flights.first.id)
     end
 
-    before do
-      flights
-      bookings
-    end
+    before { flights }
 
     it 'returns status code 200' do
       get '/api/statistics/flights', headers: { Authorization: user.token }
@@ -31,7 +28,7 @@ RSpec.describe 'Statistics Flights API', type: :request do
     it 'successfully returns 3 flights' do
       get '/api/statistics/flights', headers: { Authorization: user.token }
 
-      expect(json_body['flights'].length).to eq(1)
+      expect(json_body['flights'].length).to eq(3)
     end
 
     it 'returns flight_id' do
