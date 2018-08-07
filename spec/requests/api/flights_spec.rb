@@ -64,28 +64,28 @@ RSpec.describe 'Flights API', type: :request do
           .to include('errors' => include('token' => ['is invalid']))
       end
     end
-  end
 
-  describe 'GET /api/flights?company_id=' do
-    let(:flights) { FactoryBot.create_list(:flight, 3) }
+    context 'when query provided responds with flights' do
+      let(:flights) { FactoryBot.create_list(:flight, 3) }
 
-    before do
-      flights
-    end
+      before do
+        flights
+      end
 
-    it 'successfully returns list of flights' do
-      get "/api/flights?company_id=#{flights.first.company_id}",
-          headers: { Authorization: user.token }
+      it 'successfully returns list of flights' do
+        get "/api/flights?company_id=#{flights.first.company_id}",
+            headers: { Authorization: user.token }
 
-      expect(response).to have_http_status(:ok)
-    end
+        expect(response).to have_http_status(:ok)
+      end
 
-    it 'returns 2 flights' do
-      get "/api/flights?company_id=#{flights.first.company_id},
+      it 'returns 2 flights' do
+        get "/api/flights?company_id=#{flights.first.company_id},
            #{flights.last.company_id}",
-          headers: { Authorization: user.token }
+            headers: { Authorization: user.token }
 
-      expect(json_body['flights'].length).to eq(2)
+        expect(json_body['flights'].length).to eq(2)
+      end
     end
   end
 
@@ -123,8 +123,8 @@ RSpec.describe 'Flights API', type: :request do
       it 'returns 201' do
         post '/api/flights',
              params: { flight: {  name: 'Let za doma',
-                                  flys_at: Time.zone.now + 1.hour,
-                                  lands_at: Time.zone.now + 2.hours,
+                                  flys_at: 1.hour.from_now,
+                                  lands_at: 2.hours.from_now,
                                   base_price: 100,
                                   no_of_seats: 200,
                                   company_id: company.id } },
@@ -137,8 +137,8 @@ RSpec.describe 'Flights API', type: :request do
         expect do
           post '/api/flights',
                params: { flight: {  name: 'Let za doma',
-                                    flys_at: Time.zone.now + 1.hour,
-                                    lands_at: Time.zone.now + 2.hours,
+                                    flys_at: 1.hour.from_now,
+                                    lands_at: 2.hours.from_now,
                                     base_price: 100,
                                     no_of_seats: 200,
                                     company_id: company.id } },
@@ -149,8 +149,8 @@ RSpec.describe 'Flights API', type: :request do
       it 'creates and returns a new flight' do
         post '/api/flights',
              params: { flight: { name: 'Drugi let za doma',
-                                 flys_at: Time.zone.now + 1.hour,
-                                 lands_at: Time.zone.now + 2.hours,
+                                 flys_at: 1.hour.from_now,
+                                 lands_at: 2.hours.from_now,
                                  base_price: 100,
                                  no_of_seats: 200,
                                  company_id: company.id } },
@@ -199,8 +199,8 @@ RSpec.describe 'Flights API', type: :request do
 
       it 'responds with errors' do
         post '/api/flights', headers: { Authorization: '' }
-        expect(json_body)
-          .to include('errors' => include('token' => ['is invalid']))
+        expect(json_body['errors'])
+          .to include('token' => ['is invalid'])
       end
     end
   end
@@ -222,7 +222,7 @@ RSpec.describe 'Flights API', type: :request do
             params: { flight: { name: 'Ryanair' } },
             headers: { Authorization: user.token }
 
-        expect(json_body).to include('flight' => include('name' => 'Ryanair'))
+        expect(json_body['flight']).to include('name' => 'Ryanair')
       end
     end
 
@@ -252,8 +252,7 @@ RSpec.describe 'Flights API', type: :request do
 
       it 'responds with errors' do
         put "/api/flights/#{flight.id}", headers: { Authorization: '' }
-        expect(json_body)
-          .to include('errors' => include('token' => ['is invalid']))
+        expect(json_body['errors']).to include('token' => ['is invalid'])
       end
     end
   end
@@ -284,8 +283,7 @@ RSpec.describe 'Flights API', type: :request do
 
       it 'responds with errors' do
         delete "/api/flights/#{flight.id}", headers: { Authorization: '' }
-        expect(json_body)
-          .to include('errors' => include('token' => ['is invalid']))
+        expect(json_body['errors']).to include('token' => ['is invalid'])
       end
     end
   end

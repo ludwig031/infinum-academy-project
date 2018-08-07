@@ -16,8 +16,6 @@ class FlightSerializer < ActiveModel::Serializer
   end
 
   def no_of_booked_seats
-    Booking.joins(:flight)
-           .where('flights.company_id = ?', object.id)
-           .sum('bookings.no_of_seats')
+    object.bookings.sum(:no_of_seats)
   end
 end

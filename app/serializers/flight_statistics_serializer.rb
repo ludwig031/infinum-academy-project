@@ -4,27 +4,11 @@ class FlightStatisticsSerializer < ActiveModel::Serializer
   attribute :no_of_booked_seats
   attribute :occupancy
 
-  def flight_id
-    object.id
-  end
-
-  def revenue
-    Booking.joins(:flight)
-           .where('flights.id = ?', object.id)
-           .sum('seat_price * bookings.no_of_seats')
-  end
-
-  def no_of_booked_seats
-    Booking.joins(:flight)
-           .where('flights.id = ?', object.id)
-           .sum('bookings.no_of_seats')
-  end
-
   def occupancy
-    if no_of_booked_seats.positive?
-      ((no_of_booked_seats.to_f / object.no_of_seats) * 100).to_s << '%'
-    else
+    if object.no_of_booked_seats.nil?
       '0.0%'
+    else
+      ((object.no_of_booked_seats.to_f / object.no_of_seats) * 100).to_s << '%'
     end
   end
 end
