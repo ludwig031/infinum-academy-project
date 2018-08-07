@@ -6,8 +6,7 @@ module Api
       end
 
       def flight_query
-        Flight.left_joins(:bookings)
-              .where('flights.id = bookings.flight_id')
+        Flight.left_outer_joins(:bookings)
               .group('flights.id')
               .select('flights.*, flights.id AS flight_id')
               .select('coalesce(sum(bookings.no_of_seats *
