@@ -123,8 +123,8 @@ RSpec.describe 'Flights API', type: :request do
       it 'returns 201' do
         post '/api/flights',
              params: { flight: {  name: 'Let za doma',
-                                  flys_at: Time.zone.now + 1.hour,
-                                  lands_at: Time.zone.now + 2.hours,
+                                  flys_at: 1.hour.from_now,
+                                  lands_at: 2.hours.from_now,
                                   base_price: 100,
                                   no_of_seats: 200,
                                   company_id: company.id } },
@@ -137,8 +137,8 @@ RSpec.describe 'Flights API', type: :request do
         expect do
           post '/api/flights',
                params: { flight: {  name: 'Let za doma',
-                                    flys_at: Time.zone.now + 1.hour,
-                                    lands_at: Time.zone.now + 2.hours,
+                                    flys_at: 1.hour.from_now,
+                                    lands_at: 2.hours.from_now,
                                     base_price: 100,
                                     no_of_seats: 200,
                                     company_id: company.id } },
@@ -149,8 +149,8 @@ RSpec.describe 'Flights API', type: :request do
       it 'creates and returns a new flight' do
         post '/api/flights',
              params: { flight: { name: 'Drugi let za doma',
-                                 flys_at: Time.zone.now + 1.hour,
-                                 lands_at: Time.zone.now + 2.hours,
+                                 flys_at: 1.hour.from_now,
+                                 lands_at: 2.hours.from_now,
                                  base_price: 100,
                                  no_of_seats: 200,
                                  company_id: company.id } },
