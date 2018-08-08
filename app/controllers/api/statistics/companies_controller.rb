@@ -8,7 +8,7 @@ module Api
       private
 
       def company_query
-        FlightsQuery.new(relation: with_stats)
+        CompaniesQuery.new(relation: with_stats)
       end
     end
   end
