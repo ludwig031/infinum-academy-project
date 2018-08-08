@@ -8,7 +8,7 @@ module Api
       private
 
       def flight_query
-        FlightsQuery.new(relation: with_stats)
+        FlightsQuery.new.with_stats
       end
     end
   end
