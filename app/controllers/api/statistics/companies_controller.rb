@@ -8,7 +8,7 @@ module Api
       private
 
       def company_query
-        CompaniesQuery.new(relation: with_stats)
+        CompaniesQuery.new.with_stats
       end
     end
   end
