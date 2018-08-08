@@ -44,9 +44,6 @@ class Flight < ApplicationRecord
   end
 
   def current_price
-    difference = 15 - (flys_at.to_date - Date.current)
-    difference = difference.negative? ? 0 : difference
-    difference = difference > 15 ? 15 : difference
-    (base_price * (1 + difference / 15)).round
+    FlightCalculator(object)
   end
 end
