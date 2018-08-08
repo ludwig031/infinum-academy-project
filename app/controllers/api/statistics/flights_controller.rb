@@ -5,14 +5,10 @@ module Api
         render json: flight_query, each_serializer: FlightStatisticsSerializer
       end
 
+      private
+
       def flight_query
-        Flight.left_outer_joins(:bookings)
-              .group('flights.id')
-              .select('flights.*, flights.id AS flight_id')
-              .select('coalesce(sum(bookings.no_of_seats *
-                      bookings.seat_price),0) AS revenue')
-              .select('coalesce(sum(bookings.no_of_seats),0)
-                      AS no_of_booked_seats')
+        FlightsQuery.new(relation: with_stats)
       end
     end
   end
