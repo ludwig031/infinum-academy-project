@@ -1,9 +1,6 @@
 module Api
   class UsersController < ApplicationController
-    rescue_from ActionController::BadRequest, with: :render_bad_request
-
     before_action :authentication, only: [:index, :show, :update, :destroy]
-    # before_action :authorization, only: [:show, :update, :destroy]
 
     def index
       render json: fetch_users
@@ -39,11 +36,6 @@ module Api
     end
 
     private
-
-    def render_bad_request
-      render json: { errors: { user: ['is missing'] } },
-             status: :bad_request
-    end
 
     def user
       @user ||= User.find(params[:id])
