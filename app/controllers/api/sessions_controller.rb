@@ -1,7 +1,5 @@
 module Api
   class SessionsController < ApplicationController
-    rescue_from ActionController::BadRequest, with: :render_bad_request
-
     before_action :authentication, only: [:destroy]
 
     def create
@@ -23,11 +21,6 @@ module Api
     end
 
     private
-
-    def render_bad_request
-      render json: { errors: { session: ['is missing'] } },
-             status: :bad_request
-    end
 
     def user_params
       params.require(:session).permit(:email, :password)
