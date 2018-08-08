@@ -1,5 +1,8 @@
 # ApplicationController class inherits a constructor from ActionController::Base
 class ApplicationController < ActionController::Base
+  include Pundit
+  protect_from_forgery
+
   rescue_from ActiveRecord::RecordNotFound, with: :render_404
 
   skip_before_action :verify_authenticity_token

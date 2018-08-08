@@ -3,13 +3,14 @@ module Api
     rescue_from ActionController::BadRequest, with: :render_bad_request
 
     before_action :authentication, only: [:index, :show, :update, :destroy]
-    before_action :authorization, only: [:show, :update, :destroy]
+    # before_action :authorization, only: [:show, :update, :destroy]
 
     def index
       render json: fetch_users
     end
 
     def show
+      authorize User
       render json: user
     end
 
@@ -24,10 +25,12 @@ module Api
     end
 
     def destroy
+      authorize User
       user&.destroy
     end
 
     def update
+      authorize User
       if user.update(user_params)
         render json: user
       else
