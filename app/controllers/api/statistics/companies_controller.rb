@@ -6,8 +6,7 @@ module Api
       end
 
       def company_query
-        Company.joins('LEFT JOIN flights ON flights.company_id = companies.id
-                       LEFT JOIN bookings ON bookings.flight_id = flights.id')
+        Company.left_joins(flights: :bookings)
                .group('companies.id')
                .select('companies.*, companies.id AS company_id')
                .select('coalesce(sum(bookings.no_of_seats *
