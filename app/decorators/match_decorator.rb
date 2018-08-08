@@ -11,9 +11,5 @@ module WorldCup
     def score
       "#{home_team_goals} : #{away_team_goals}"
     end
-
-    def venue
-      match_hash['venue']
-    end
   end
 end
