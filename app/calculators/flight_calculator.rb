@@ -9,6 +9,6 @@ class FlightCalculator
     difference = 15 - (flight.flys_at.to_date - Date.current)
     difference = difference.negative? ? 0 : difference
     difference = difference > 15 ? 15 : difference
-    (base_price * (1 + difference / 15)).round
+    (flight.base_price * (1 + difference / 15)).round
   end
 end
