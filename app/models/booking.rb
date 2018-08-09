@@ -11,9 +11,6 @@ class Booking < ApplicationRecord
   scope :active,
         -> { joins(:flight).where('flights.flys_at > ?', Time.zone.now) }
 
-  validates :seat_price,
-            presence: true,
-            numericality: { greater_than: 0 }
   validates :no_of_seats,
             presence: true,
             numericality: { greater_than: 0 }
