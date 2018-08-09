@@ -4,7 +4,7 @@ class ApplicationController < ActionController::Base
   protect_from_forgery
 
   rescue_from ActiveRecord::RecordNotFound, with: :render_404
-  # rescue_from ActionController::ParameterMissing with: :render_params_missing
+  rescue_from ActionController::ParameterMissing, with: :render_params_missing
 
   skip_before_action :verify_authenticity_token
   before_action :authentication
