@@ -6,7 +6,7 @@ class CompaniesQuery
   end
 
   def with_stats
-    relation.joins(flights: :bookings)
+    relation.left_outer_joins(flights: :bookings)
             .group('companies.id')
             .select('companies.*, companies.id AS company_id')
             .select('coalesce(sum(bookings.no_of_seats *
