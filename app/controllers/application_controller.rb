@@ -4,6 +4,7 @@ class ApplicationController < ActionController::Base
   protect_from_forgery
 
   rescue_from ActiveRecord::RecordNotFound, with: :render_404
+  rescue_from ActionController::ParameterMissing with: :render_param_missing
 
   skip_before_action :verify_authenticity_token
   before_action :authentication
@@ -30,5 +31,10 @@ class ApplicationController < ActionController::Base
 
   def render_404
     render json: { errors: { resource: ["doesn't exist"] } }, status: :not_found
+  end
+
+  def render_param_missing
+    render json: { errors: { exception.param => 'is missing' } },
+           status: :bad_request
   end
 end
