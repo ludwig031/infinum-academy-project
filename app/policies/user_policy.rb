@@ -1,26 +1,21 @@
 class UserPolicy < ApplicationPolicy
-  attr_reader :user
+  attr_reader :user, :current_user
 
-  def initialize(user)
+  def initialize(user, current_user)
     @user = user
+    @current_user = current_user
   end
 
   def show?
-    return if current_user == user
-    render json: { errors: { resource: ['is forbidden'] } },
-           status: :forbidden
+    current_user == user
   end
 
   def update?
-    return if current_user == user
-    render json: { errors: { resource: ['is forbidden'] } },
-           status: :forbidden
+    current_user == user
   end
 
   def destroy?
-    return if current_user == user
-    render json: { errors: { resource: ['is forbidden'] } },
-           status: :forbidden
+    current_user == user
   end
 
   class Scope < Scope

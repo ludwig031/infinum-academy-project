@@ -7,21 +7,15 @@ class BookingPolicy < ApplicationPolicy
   end
 
   def show?
-    return if current_user == booking.user
-    render json: { errors: { resource: ['is forbidden'] } },
-           status: :forbidden
+    user == booking.user
   end
 
   def update?
-    return if current_user == booking.user
-    render json: { errors: { resource: ['is forbidden'] } },
-           status: :forbidden
+    user == booking.user || booking.flight.flys_at < Date.current
   end
 
   def destroy?
-    return if current_user == booking.user
-    render json: { errors: { resource: ['is forbidden'] } },
-           status: :forbidden
+    user == booking.user
   end
 
   class Scope < Scope
