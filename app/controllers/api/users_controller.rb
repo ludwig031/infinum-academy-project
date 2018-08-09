@@ -7,7 +7,7 @@ module Api
     end
 
     def show
-      authorize User
+      authorize user
       render json: user
     end
 
@@ -22,12 +22,12 @@ module Api
     end
 
     def destroy
-      authorize User
+      authorize user
       user&.destroy
     end
 
     def update
-      authorize User
+      authorize user
       if user.update(user_params)
         render json: user
       else

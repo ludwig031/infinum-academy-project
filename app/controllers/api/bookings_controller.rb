@@ -2,13 +2,12 @@ module Api
   class BookingsController < ApplicationController
     rescue_from ActionController::BadRequest, with: :render_bad_request
 
-    # before_action :authorization, only: [:show, :update, :destroy]
-
     def index
       render json: fetch_bookings
     end
 
     def show
+      authorize booking
       render json: booking
     end
 
@@ -26,12 +25,12 @@ module Api
     end
 
     def destroy
-      authorize Booking
+      authorize booking
       booking&.destroy
     end
 
     def update
-      authorize Booking
+      authorize booking
       if booking.update(booking_params
                             .merge(seat_price: seat_price(booking.flight_id)))
         render json: booking
