@@ -5,6 +5,7 @@ class ApplicationController < ActionController::Base
 
   rescue_from ActiveRecord::RecordNotFound, with: :render_404
   rescue_from ActionController::ParameterMissing, with: :render_params_missing
+  rescue_from Pundit::NotAuthorizedError, with: :render_unauthorized
 
   skip_before_action :verify_authenticity_token
   before_action :authentication
@@ -33,8 +34,13 @@ class ApplicationController < ActionController::Base
     render json: { errors: { resource: ["doesn't exist"] } }, status: :not_found
   end
 
-  # def render_params_missing
-  #   render json: { errors: { exception.param => 'is missing' } },
-  #          status: :bad_request
-  # end
+  def render_params_missing
+    render json: { errors: { exception.param => 'is missing' } },
+           status: :bad_request
+  end
+
+  def render_unauthorized
+    render json: { errors: { resource: ['is forbidden'] } },
+           status: :forbidden
+  end
 end
