@@ -34,9 +34,8 @@ class ApplicationController < ActionController::Base
     render json: { errors: { resource: ["doesn't exist"] } }, status: :not_found
   end
 
-  def render_params_missing
-    e = ActionController::ParameterMissing
-    render json: { errors: { e.message => 'is missing' } },
+  def render_params_missing(exception)
+    render json: { errors: { exception.param => 'is missing' } },
            status: :bad_request
   end
 
