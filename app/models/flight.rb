@@ -44,6 +44,6 @@ class Flight < ApplicationRecord
   end
 
   def current_price
-    FlightCalculator(object)
+    FlightCalculator
   end
 end
