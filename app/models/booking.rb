@@ -24,7 +24,8 @@ class Booking < ApplicationRecord
 
   def not_in_future
     return if flight && flight.flys_at > Time.zone.now
-    errors.add(:flight, 'must be booked in the future')
+    errors.add(:flight, 'must be booked in the future',
+               :resource, 'is forbidden')
   end
 
   def no_of_booked_seats
