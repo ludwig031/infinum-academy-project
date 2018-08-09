@@ -1,8 +1,7 @@
 class BookingForm < ActiveType::Record[Booking]
-  before_save :set_seat_price
+  before_save :set_seat_price, if: :no_of_seats_changed?
 
   def set_seat_price
-    return unless no_of_seats_changed? && id.nil?
     self.seat_price = FlightCalculator.new(flight).price
   end
 end
