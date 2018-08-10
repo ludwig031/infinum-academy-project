@@ -6,7 +6,6 @@ namespace :world_cup do
     games = WorldCup.matches_on(date).collect do |match|
       WorldCup::MatchDecorator.new(match)
     end
-    # game = WorldCup::MatchDecorator.new(match)
     tp games, :venue, :home_team, :away_team, :score
   end
 end
