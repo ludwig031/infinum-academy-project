@@ -5,10 +5,7 @@ class CompanyStatisticsSerializer < ActiveModel::Serializer
   attribute :average_price_of_seats
 
   def average_price_of_seats
-    if object.total_no_of_booked_seats.zero?
-      0
-    else
-      object.total_revenue.to_f / object.total_no_of_booked_seats.to_f
-    end
+    return 0 if object.total_no_of_booked_seats.zero?
+    object.total_revenue.to_f / object.total_no_of_booked_seats
   end
 end
