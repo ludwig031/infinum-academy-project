@@ -3,8 +3,6 @@ RSpec.describe Booking, type: :model do
 
   it { is_expected.to validate_numericality_of(:seat_price) }
 
-  it { is_expected.to validate_numericality_of(:no_of_seats) }
-
   it 'is invalid if flight is in past' do
     flight = FactoryBot.create(:flight,
                                flys_at: 5.hours.ago)
