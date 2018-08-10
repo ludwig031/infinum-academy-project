@@ -3,7 +3,8 @@ namespace :world_cup do
   task :scores, [:date] => [:environment] do |_t, args|
     date = args[:date]
     date = Date.parse(date).strftime('%Y-%m-%d')
-    games = WorldCup.matches_on(date)
-    tp games, :venue, :home_team, :away_team, :score
+    match = WorldCup.matches_on(date)
+    game = WorldCup::MatchDecorator.new(match)
+    tp game, :venue, :home_team, :away_team, :score
   end
 end
