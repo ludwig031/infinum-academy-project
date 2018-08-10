@@ -110,8 +110,7 @@ RSpec.describe 'Bookings API', type: :request do
         post '/api/bookings',
              params: { booking: { no_of_seats: 1,
                                   seat_price: 2,
-                                  flight_id: flight.id,
-                                  user: user } },
+                                  flight_id: flight.id } },
              headers: { Authorization: user.token }
 
         expect(response).to have_http_status(:created)
@@ -122,8 +121,7 @@ RSpec.describe 'Bookings API', type: :request do
           post '/api/bookings',
                params: { booking: { no_of_seats: 1,
                                     seat_price: 2,
-                                    flight_id: flight.id,
-                                    user: user } },
+                                    flight_id: flight.id } },
                headers: { Authorization: user.token }
         end.to change(Booking, :count).by(+1)
       end
@@ -219,6 +217,45 @@ RSpec.describe 'Bookings API', type: :request do
             headers: { Authorization: user.token }
 
         expect(json_body).to include('errors')
+      end
+    end
+
+    context 'when user updates seat price' do
+      let(:booking) { FactoryBot.create(:booking, user: user) }
+
+      before { booking }
+
+      it 'returns 200 OK if no_of_seats changed' do
+        put "/api/bookings/#{booking.id}",
+            params: { booking: { no_of_seats: 5, seat_price: 1000 } },
+            headers: { Authorization: user.token }
+
+        expect(response).to have_http_status(:ok)
+      end
+
+      it 'returns a updated booking with calculated, not set price' do
+        put "/api/bookings/#{booking.id}",
+            params: { booking: { no_of_seats: 5, seat_price: 1000 } },
+            headers: { Authorization: user.token }
+
+        expect(json_body['booking']).to include('no_of_seats' => 5,
+                                                'seat_price' => 167)
+      end
+
+      it 'returns 200 OK' do
+        put "/api/bookings/#{booking.id}",
+            params: { booking: { seat_price: 1000 } },
+            headers: { Authorization: user.token }
+
+        expect(response).to have_http_status(:ok)
+      end
+
+      it 'returns a unchanged booking' do
+        put "/api/bookings/#{booking.id}",
+            params: { booking: { seat_price: 1000 } },
+            headers: { Authorization: user.token }
+
+        expect(json_body['booking']).to include('seat_price' => 2)
       end
     end
 

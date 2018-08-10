@@ -7,8 +7,8 @@ Rails.application.routes.draw do
     resource :session, only: [:create, :destroy]
 
     namespace :statistics do
-      resources :companies, only: [:index, :destroy]
-      resources :flights, only: [:index, :destroy]
+      resources :companies, only: [:index]
+      resources :flights, only: [:index]
     end
   end
 

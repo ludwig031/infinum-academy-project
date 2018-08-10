@@ -1,13 +1,13 @@
 module Api
   class UsersController < ApplicationController
     before_action :authentication, only: [:index, :show, :update, :destroy]
-    before_action :authorization, only: [:show, :update, :destroy]
 
     def index
       render json: fetch_users
     end
 
     def show
+      authorize user
       render json: user
     end
 
@@ -22,10 +22,12 @@ module Api
     end
 
     def destroy
+      authorize user
       user&.destroy
     end
 
     def update
+      authorize user
       if user.update(user_params)
         render json: user
       else

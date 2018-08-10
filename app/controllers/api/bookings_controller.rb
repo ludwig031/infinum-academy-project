@@ -1,41 +1,48 @@
 module Api
   class BookingsController < ApplicationController
-    before_action :authorization, only: [:show, :update, :destroy]
+    rescue_from ActionController::BadRequest, with: :render_bad_request
 
     def index
       render json: fetch_bookings
     end
 
     def show
+      authorize booking
       render json: booking
     end
 
     def create
-      booking = Booking.new(booking_params)
+      authorize Booking
+      booking = BookingForm.new(booking_params)
       booking.user_id = current_user.id
-      booking.seat_price = seat_price
-
       if booking.save
-        render json: booking, status: :created
+        render json: booking, serializer: BookingSerializer, status: :created
       else
         render json: { errors: booking.errors }, status: :bad_request
       end
     end
 
     def destroy
+      authorize booking
       booking&.destroy
     end
 
     def update
-      if booking.update(booking_params
-                            .merge(seat_price: seat_price(booking.flight_id)))
+      authorize booking
+      form = ActiveType.cast(booking, BookingForm)
+      if form.update(booking_params)
         render json: booking
       else
-        render json: { errors: booking.errors }, status: :bad_request
+        render json: { errors: form.errors }, status: :bad_request
       end
     end
 
     private
+
+    def render_bad_request
+      render json: { errors: { booking: ['is missing'] } },
+             status: :bad_request
+    end
 
     def booking
       @booking ||= Booking.find(params[:id])

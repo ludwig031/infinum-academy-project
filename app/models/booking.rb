@@ -11,9 +11,6 @@ class Booking < ApplicationRecord
   scope :active,
         -> { joins(:flight).where('flights.flys_at > ?', Time.zone.now) }
 
-  validates :seat_price,
-            presence: true,
-            numericality: { greater_than: 0 }
   validates :no_of_seats,
             presence: true,
             numericality: { greater_than: 0 }
@@ -25,6 +22,7 @@ class Booking < ApplicationRecord
   def not_in_future
     return if flight && flight.flys_at > Time.zone.now
     errors.add(:flight, 'must be booked in the future')
+    errors.add(:resource, 'is forbidden')
   end
 
   def no_of_booked_seats
