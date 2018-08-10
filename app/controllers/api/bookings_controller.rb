@@ -13,12 +13,10 @@ module Api
 
     def create
       authorize Booking
-      booking = Booking.new(booking_params)
+      booking = BookingForm.new(booking_params)
       booking.user_id = current_user.id
-      booking.seat_price = seat_price
-
       if booking.save
-        render json: booking, status: :created
+        render json: booking, serializer: BookingSerializer, status: :created
       else
         render json: { errors: booking.errors }, status: :bad_request
       end
@@ -31,8 +29,8 @@ module Api
 
     def update
       authorize booking
-      if booking.update(booking_params
-                            .merge(seat_price: seat_price(booking.flight_id)))
+      form = ActiveType.cast(booking, BookingForm)
+      if form.update(booking_params)
         render json: booking
       else
         render json: { errors: booking.errors }, status: :bad_request
