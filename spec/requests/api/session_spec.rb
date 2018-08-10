@@ -24,17 +24,15 @@ RSpec.describe 'Companies API', type: :request do
         post '/api/session', params:
             { session: user_params }
 
-        expect(json_body).to include('session' =>
-                                         include('token' => user.token))
+        expect(json_body['session']).to include('token' => user.token)
       end
 
       it 'responds with user information' do
         post '/api/session', params:
             { session: user_params }
 
-        expect(json_body).to include('session' =>
-                                         include('user' =>
-                                                     include('id' => user.id)))
+        expect(json_body['session'])
+          .to include('user' => include('id' => user.id))
       end
     end
 
@@ -50,8 +48,7 @@ RSpec.describe 'Companies API', type: :request do
         post '/api/session', params:
             { session: wrong_params }
 
-        expect(json_body)
-          .to include('errors' => include('credentials' => ['are invalid']))
+        expect(json_body['errors']).to include('credentials' => ['are invalid'])
       end
     end
   end

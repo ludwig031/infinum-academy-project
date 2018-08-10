@@ -20,6 +20,28 @@ RSpec.describe 'Bookings API', type: :request do
       expect(json_body['bookings'].length).to eq 3
     end
 
+    it 'returns sorted bookings' do
+      get '/api/bookings', headers: { Authorization: user.token }
+
+      expect(json_body['bookings'])
+        .to eq(json_body['bookings']
+                     .sort_by { |o| o['flight']['flys_at'] }
+                     .sort_by { |o| o['flight']['name'] }
+                     .sort_by { |o| o['created_at'] })
+    end
+
+    it 'contains total_price' do
+      get '/api/bookings', headers: { Authorization: user.token }
+
+      expect(json_body['bookings'][0]).to include('total_price')
+    end
+
+    it 'contains flight' do
+      get '/api/bookings', headers: { Authorization: user.token }
+
+      expect(json_body['bookings'][0]).to include('flight')
+    end
+
     context 'when unauthenticated' do
       it 'fails' do
         get '/api/bookings', headers: { Authorization: '' }
@@ -28,8 +50,7 @@ RSpec.describe 'Bookings API', type: :request do
 
       it 'responds with errors' do
         get '/api/bookings', headers: { Authorization: '' }
-        expect(json_body)
-          .to include('errors' => include('token' => ['is invalid']))
+        expect(json_body['errors']).to include('token' => ['is invalid'])
       end
     end
   end
@@ -55,8 +76,7 @@ RSpec.describe 'Bookings API', type: :request do
 
       it 'responds with errors' do
         get "/api/bookings/#{booking.id}", headers: { Authorization: '' }
-        expect(json_body)
-          .to include('errors' => include('token' => ['is invalid']))
+        expect(json_body['errors']).to include('token' => ['is invalid'])
       end
     end
 
@@ -76,8 +96,7 @@ RSpec.describe 'Bookings API', type: :request do
         get "/api/bookings/#{booking.id}",
             headers: { Authorization: another_user.token }
 
-        expect(json_body)
-          .to include('errors' => include('resource' => ['is forbidden']))
+        expect(json_body['errors']).to include('resource' => ['is forbidden'])
       end
     end
   end
@@ -117,11 +136,14 @@ RSpec.describe 'Bookings API', type: :request do
                                   user: user } },
              headers: { Authorization: user.token }
 
-        expect(json_body).to include('booking' => include('seat_price' => 2))
+        expect(json_body['booking']).to include('no_of_seats' => 1)
       end
     end
 
     context 'when params are invalid' do
+      let(:flight) { FactoryBot.create(:flight) }
+      let(:user) { FactoryBot.create(:user) }
+
       it 'returns 400 Bad Request' do
         post '/api/bookings',
              params: { booking: { seat_price: '' } },
@@ -137,6 +159,15 @@ RSpec.describe 'Bookings API', type: :request do
 
         expect(json_body).to include('errors')
       end
+
+      it 'flight is overbooked' do
+        post '/api/bookings',
+             params: { booking: { flight_id: flight.id,
+                                  no_of_seats: flight.no_of_seats + 1 } },
+             headers: { Authorization: user.token }
+
+        expect(json_body['errors']).to include('flight')
+      end
     end
 
     context 'when unauthenticated' do
@@ -147,8 +178,7 @@ RSpec.describe 'Bookings API', type: :request do
 
       it 'responds with errors' do
         post '/api/bookings', headers: { Authorization: '' }
-        expect(json_body)
-          .to include('errors' => include('token' => ['is invalid']))
+        expect(json_body['errors']).to include('token' => ['is invalid'])
       end
     end
   end
@@ -159,7 +189,7 @@ RSpec.describe 'Bookings API', type: :request do
     context 'when params are valid' do
       it 'returns 200 OK' do
         put "/api/bookings/#{booking.id}",
-            params: { booking: { seat_price: 5 } },
+            params: { booking: { no_of_seats: 1 } },
             headers: { Authorization: user.token }
 
         expect(response).to have_http_status(:ok)
@@ -167,17 +197,17 @@ RSpec.describe 'Bookings API', type: :request do
 
       it 'returns a created booking' do
         put "/api/bookings/#{booking.id}",
-            params: { booking: { seat_price: 25 } },
+            params: { booking: { no_of_seats: 1 } },
             headers: { Authorization: user.token }
 
-        expect(json_body).to include('booking' => include('seat_price' => 25))
+        expect(json_body['booking']).to include('no_of_seats' => 1)
       end
     end
 
     context 'when params are invalid' do
       it 'returns 400 Bad Request' do
         put "/api/bookings/#{booking.id}",
-            params: { booking: { seat_price: '' } },
+            params: { booking: { no_of_seats: '' } },
             headers: { Authorization: user.token }
 
         expect(response).to have_http_status(:bad_request)
@@ -185,7 +215,7 @@ RSpec.describe 'Bookings API', type: :request do
 
       it 'returns all errors' do
         put "/api/bookings/#{booking.id}",
-            params: { booking: { seat_price: '' } },
+            params: { booking: { no_of_seats: '' } },
             headers: { Authorization: user.token }
 
         expect(json_body).to include('errors')
@@ -200,8 +230,7 @@ RSpec.describe 'Bookings API', type: :request do
 
       it 'responds with errors' do
         put "/api/bookings/#{booking.id}", headers: { Authorization: '' }
-        expect(json_body)
-          .to include('errors' => include('token' => ['is invalid']))
+        expect(json_body['errors']).to include('token' => ['is invalid'])
       end
     end
 
@@ -223,8 +252,7 @@ RSpec.describe 'Bookings API', type: :request do
             params: { booking: { seat_price: 5 } },
             headers: { Authorization: another_user.token }
 
-        expect(json_body)
-          .to include('errors' => include('resource' => ['is forbidden']))
+        expect(json_body['errors']).to include('resource' => ['is forbidden'])
       end
     end
   end
@@ -255,8 +283,7 @@ RSpec.describe 'Bookings API', type: :request do
 
       it 'responds with errors' do
         delete "/api/bookings/#{booking.id}", headers: { Authorization: '' }
-        expect(json_body)
-          .to include('errors' => include('token' => ['is invalid']))
+        expect(json_body['errors']).to include('token' => ['is invalid'])
       end
     end
 
@@ -276,8 +303,7 @@ RSpec.describe 'Bookings API', type: :request do
         delete "/api/bookings/#{booking.id}",
                headers: { Authorization: another_user.token }
 
-        expect(json_body)
-          .to include('errors' => include('resource' => ['is forbidden']))
+        expect(json_body['errors']).to include('resource' => ['is forbidden'])
       end
     end
   end

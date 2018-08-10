@@ -18,6 +18,20 @@ RSpec.describe 'Companies API', type: :request do
       expect(json_body['companies'].length).to eq 3
     end
 
+    it 'companies are sorted' do
+      get '/api/companies', headers: { Authorization: user.token }
+
+      expect(json_body['companies']).to eq(json_body['companies']
+                                               .sort_by { |o| o['name'] })
+    end
+
+    it 'containes no_of_active_flights' do
+      get '/api/companies',
+          headers: { Authorization: user.token }
+
+      expect(json_body['companies'][0]).to include('no_of_active_flights')
+    end
+
     context 'when unauthenticated' do
       it 'fails' do
         get '/api/companies', headers: { Authorization: '' }
@@ -26,8 +40,39 @@ RSpec.describe 'Companies API', type: :request do
 
       it 'responds with errors' do
         get '/api/companies', headers: { Authorization: '' }
-        expect(json_body)
-          .to include('errors' => include('token' => ['is invalid']))
+        expect(json_body['errors']).to include('token' => ['is invalid'])
+      end
+    end
+
+    context 'when query provided responds with companies' do
+      let(:first) { FactoryBot.create(:flight) }
+      let(:companies) { FactoryBot.create_list(:company, 2) }
+
+      before do
+        first
+        companies
+      end
+
+      it 'returns status code 200' do
+        get '/api/companies?filter=active',
+            headers: { Authorization: user.token }
+
+        expect(response).to have_http_status(:ok)
+      end
+
+      it 'successfully returns 1 company' do
+        get '/api/companies?filter=active',
+            headers: { Authorization: user.token }
+
+        expect(json_body['companies'].length).to eq(1)
+      end
+
+      it 'companies are sorted' do
+        get '/api/companies?filter=active',
+            headers: { Authorization: user.token }
+
+        expect(json_body['companies']).to eq(json_body['companies']
+                                                 .sort_by { |o| o['name'] })
       end
     end
   end
@@ -53,8 +98,7 @@ RSpec.describe 'Companies API', type: :request do
 
       it 'responds with errors' do
         get "/api/companies/#{company.id}", headers: { Authorization: '' }
-        expect(json_body)
-          .to include('errors' => include('token' => ['is invalid']))
+        expect(json_body['errors']).to include('token' => ['is invalid'])
       end
     end
   end
@@ -82,7 +126,7 @@ RSpec.describe 'Companies API', type: :request do
              params: { company: { name: 'Ryanair' } },
              headers: { Authorization: user.token }
 
-        expect(json_body).to include('company' => include('name' => 'Ryanair'))
+        expect(json_body['company']).to include('name' => 'Ryanair')
       end
     end
 
@@ -112,8 +156,7 @@ RSpec.describe 'Companies API', type: :request do
 
       it 'responds with errors' do
         post '/api/companies', headers: { Authorization: '' }
-        expect(json_body)
-          .to include('errors' => include('token' => ['is invalid']))
+        expect(json_body['errors']).to include('token' => ['is invalid'])
       end
     end
   end
@@ -135,7 +178,7 @@ RSpec.describe 'Companies API', type: :request do
             params: { company: { name: 'Ryanair' } },
             headers: { Authorization: user.token }
 
-        expect(json_body).to include('company' => include('name' => 'Ryanair'))
+        expect(json_body['company']).to include('name' => 'Ryanair')
       end
     end
 
@@ -165,8 +208,7 @@ RSpec.describe 'Companies API', type: :request do
 
       it 'responds with errors' do
         put "/api/companies/#{company.id}", headers: { Authorization: '' }
-        expect(json_body)
-          .to include('errors' => include('token' => ['is invalid']))
+        expect(json_body['errors']).to include('token' => ['is invalid'])
       end
     end
   end
@@ -197,8 +239,7 @@ RSpec.describe 'Companies API', type: :request do
 
       it 'responds with errors' do
         delete "/api/companies/#{company.id}", headers: { Authorization: '' }
-        expect(json_body)
-          .to include('errors' => include('token' => ['is invalid']))
+        expect(json_body['errors']).to include('token' => ['is invalid'])
       end
     end
   end

@@ -1,7 +1,7 @@
 module Api
   class FlightsController < ApplicationController
     def index
-      render json: Flight.all
+      render json: fetch_flights
     end
 
     def show
@@ -35,6 +35,14 @@ module Api
     end
 
     private
+
+    def fetch_flights
+      if params[:company_id]
+        Flight.by_company(params[:company_id].split(',')).active.ordered
+      else
+        Flight.active.ordered
+      end
+    end
 
     def flight_params
       params.require(:flight).permit(:name,

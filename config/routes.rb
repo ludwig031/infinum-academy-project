@@ -5,8 +5,14 @@ Rails.application.routes.draw do
     resources :flights, except: [:new, :edit]
     resources :bookings, except: [:new, :edit]
     resource :session, only: [:create, :destroy]
+
+    namespace :statistics do
+      resources :companies, only: [:index, :destroy]
+      resources :flights, only: [:index, :destroy]
+    end
   end
 
   ActiveAdmin.routes(self)
+
   get '/world-cup', to: 'application#matches'
 end

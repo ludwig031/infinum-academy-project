@@ -4,6 +4,14 @@ class User < ApplicationRecord
 
   has_many :bookings, dependent: :destroy
   has_many :flights, through: :bookings
+
+  scope :with_query, lambda { |query|
+    where('email ILIKE :query OR
+           first_name ILIKE :query OR
+           last_name ILIKE :query',
+          query: "%#{query}%")
+  }
+
   validates :first_name,
             presence: true,
             length: { minimum: 2 }

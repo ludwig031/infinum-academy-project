@@ -1,7 +1,7 @@
 module Api
   class CompaniesController < ApplicationController
     def index
-      render json: Company.all
+      render json: fetch_companies
     end
 
     def show
@@ -35,6 +35,14 @@ module Api
     end
 
     private
+
+    def fetch_companies
+      if params[:filter] == 'active'
+        Company.active_flights.order(:name)
+      else
+        Company.all.order(:name)
+      end
+    end
 
     def company_params
       params.require(:company).permit(:name)

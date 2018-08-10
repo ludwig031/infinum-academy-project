@@ -3,6 +3,5 @@ class UserSerializer < ActiveModel::Serializer
   attribute :first_name
   attribute :last_name
   attribute :email
-  has_many :bookings
-  has_many :flights
+  has_many :bookings, serializer: Users::BookingSerializer
 end
