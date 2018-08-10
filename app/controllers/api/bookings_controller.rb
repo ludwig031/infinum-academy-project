@@ -33,7 +33,7 @@ module Api
       if form.update(booking_params)
         render json: booking
       else
-        render json: { errors: booking.errors }, status: :bad_request
+        render json: { errors: form.errors }, status: :bad_request
       end
     end
 
