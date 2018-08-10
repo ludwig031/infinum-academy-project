@@ -1,7 +1,5 @@
 module Api
   class BookingsController < ApplicationController
-    rescue_from ActionController::BadRequest, with: :render_bad_request
-
     def index
       render json: fetch_bookings
     end
@@ -38,11 +36,6 @@ module Api
     end
 
     private
-
-    def render_bad_request
-      render json: { errors: { booking: ['is missing'] } },
-             status: :bad_request
-    end
 
     def booking
       @booking ||= Booking.find(params[:id])
