@@ -4,10 +4,6 @@ class CompanyStatisticsSerializer < ActiveModel::Serializer
   attribute :total_no_of_booked_seats
   attribute :average_price_of_seats
 
-  def company_id
-    object.id
-  end
-
   def average_price_of_seats
     if object.total_no_of_booked_seats.zero?
       0
