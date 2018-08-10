@@ -11,7 +11,7 @@ RSpec.describe CompanyPolicy do
     record
   end
 
-  context 'when user is not logged in' do
+  context 'when user is logged in' do
     it { is_expected.to permit_action(:index) }
     it { is_expected.to permit_action(:show) }
     it { is_expected.to permit_action(:create) }
