@@ -11,7 +11,7 @@ class BookingPolicy < ApplicationPolicy
   end
 
   def update?
-    user == booking.user || booking.flight.flys_at > Date.current
+    user == booking.user && booking.flight.flys_at > Date.current
   end
 
   def destroy?
