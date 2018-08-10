@@ -7,7 +7,7 @@ RSpec.describe BookingPolicy do
 
   before { user }
 
-  context 'when user is logged in' do
+  context 'when user authorized' do
     let(:booking) { FactoryBot.create(:booking, user: user) }
 
     it { is_expected.to permit_action(:index) }
@@ -17,7 +17,7 @@ RSpec.describe BookingPolicy do
     it { is_expected.to permit_action(:destroy) }
   end
 
-  context 'when user is not logged in' do
+  context 'when user is not authorized' do
     let(:booking) { FactoryBot.create(:booking) }
 
     it { is_expected.to permit_action(:index) }

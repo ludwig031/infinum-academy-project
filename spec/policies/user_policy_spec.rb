@@ -7,7 +7,7 @@ RSpec.describe UserPolicy do
 
   before { user }
 
-  context 'when user is logged in' do
+  context 'when user is authotized' do
     let(:current_user) { user }
 
     before { current_user }
@@ -19,7 +19,7 @@ RSpec.describe UserPolicy do
     it { is_expected.to permit_action(:destroy) }
   end
 
-  context 'when user is not logged in' do
+  context 'when user is not authotized in' do
     let(:current_user) { FactoryBot.create(:user) }
 
     before { current_user }
